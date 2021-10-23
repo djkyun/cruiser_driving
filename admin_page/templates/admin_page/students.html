@@ -1,0 +1,376 @@
+
+	{% extends 'admin_page/base.html' %}
+	{% block body %}
+	{% load static %}
+	{% load admin_templatetags %}
+	{% load humanize %}
+	
+	<!-- Begin Page Content -->
+	<div class="container-fluid">
+
+		<!-- Page Heading -->
+		<h1 class="h3 mb-2 text-gray-900 font-weight-bold">Students</h1>
+		
+		<p class="mb-4">
+			List of All Students Enrolled
+		</p>
+
+
+			{% for message in messages %}
+				<h4 class = "alert alert-success alert-dismissible fade show" role = "alert">
+					<strong> {{ message }} </strong>
+					<button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+						<span aria-hidden = "true"> &times; </span>
+					</button>
+				</h4>
+			{% endfor %}
+						
+			<h5 class = "alert alert-warning alert-dismissable {% has_records_note '' 'd-none' userlist %}">
+				{% has_records_note 'No Students Record Found' '' userlist %}
+				<a class = "btn btn-inverse btn-sm" aria-label = "close" data-dismiss = "alert"><span aria-hidden = "true">x</span></a>
+			</h5>
+					
+			<!-- DataTales Example -->
+			<div class="card shadow mb-4 {% has_records 'd-none' '' userlist %}">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-inverse text-gray-700">Student Counts ({{ student_counts }})</h6>
+				</div>
+				<div class="card-body">
+				
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+				  <li class="nav-item" role="presentation">
+					<a class="nav-link active" id="ongoing-tab" data-toggle="tab" href="#ongoing" role="tab" aria-controls="ongoing" aria-selected="true">On-Going</a>
+				  </li>
+				  <li class="nav-item" role="presentation">
+					<a class="nav-link" id="completed-tab" class = "text-gray-900" data-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Completed</a>
+				  </li>						  
+				</ul>
+				
+				<div class="tab-content" id="myTabContent">
+				
+				  <div class="tab-pane fade show active" id="ongoing" role="tabpanel" aria-labelledby="ongoing-tab">
+				  
+				   <div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Full Name</th>
+								<th>Course</th>
+								<th>Contact Details</th>
+								<th>Age</th>
+								<th>Start Date</th>
+								<th>Options</th>
+							</tr>
+						</thead>                                  
+						
+						<tbody>                                     
+							
+							{% for stud in student_list %}
+							
+							 <tr>
+								<td>{{ forloop.counter }}</td>
+								<td>
+								<a data-toggle = "modal" role = "button" data-target = "#modal-image-{{stud.id}}">{{ stud.fullname }}</a>
+								</td>
+								<td>{% get_course_category_by_enrolment_id stud.authentication_user_id enrolmentlist courselist categorylist cartypelist categorytypelist %}</td>
+								<td>
+									{{ stud.email_address }} | {{ stud.contact_number }}
+								</td>
+								<td>{% get_age stud.birthdate %} y/o </td>
+								<td>{{ stud.datetime_registered }}</td>
+								<td>
+								
+									<button type = "button" class = "btn btn-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-grades-student-{{ stud.id }}">View Grades</button>
+									<button type = "button" class = "btn btn-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-schedule-student-{{ stud.authentication_user_id }}">View Schedules</button>
+									<button type = "button" class = "btn btn-outline-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-payment-details-student-{{ stud.authentication_user_id }}">View Payment Details</button>
+									
+											<div class = "modal fade in" id = "modal-view-grades-student-{{ stud.id }}">
+												<div class = "modal-dialog">
+													<div class = "modal-content">
+														<div class = "modal-header">
+															<h2 class = "text-uppercase font-weight-bold"> View Grades {{ stud.fullname }} </h2>
+														</div>
+														<div class = "modal-body">
+															<form method = "POST" action  = "admin_page/add_user">
+																{% csrf_token %}
+																Grades ni {{ stud.fullname }} Here
+															</form>
+														</div>
+													</div>
+												</div>
+											</div> <!-- modal-view-grades-student -->
+									
+											<div class = "modal fade in" id = "modal-view-schedule-student-{{ stud.authentication_user_id }}">
+												
+													<div class = "modal-content modal-dialog">
+													
+													<div class = "modal-header">
+														<h2 class = "text-uppercase font-weight-bold"> View Schedule {{ stud.fullname }} </h2>
+														<button type = "button" aria-label = "close" class = "btn btn-inverse" data-dismiss = "modal"><span aria-hidden = "true"><i class = "fa fa-close"></i></span></a>
+													</div>
+													
+													<div class = "modal-body">
+														<h4>
+															<small>Course</small><br/>
+															{% get_course_category_by_enrolment_id stud.authentication_user_id enrolmentlist courselist categorylist cartypelist categorytypelist %}
+														</h4>
+														<h6>
+															<span class = "badge badge-success">Instructor</span> {% get_instructor_by_a_user_id stud.authentication_user_id enrolmentlist attendance_list appointment_list instructor_list %}
+														</h6>
+														<h3 class = "text-gray-900">
+															{% get_schedule_by_a_user_id stud.authentication_user_id enrolmentlist attendance_list appointment_list schedule_type_list %}
+															({% get_schedule_name_by_a_user_id stud.authentication_user_id enrolmentlist attendance_list appointment_list schedule_type_list %})
+														</h3>
+														
+														<div class = "table-responsive">
+															<table class = "table table-bordered">
+																<thead>																
+																	<th>Schedule Days</th>
+																	<th>Date</th>
+																	<th>Time Start</th>
+																	<th>Time End</th>
+																	<th>Hours Duration</th>
+																</thead>
+																<tbody>
+																	{% for att in attendance_list %}
+																		{% for el in enrolmentlist %}
+																			{% ifequal att.enrolment_id|stringformat:"s" el.id|stringformat:"s"%}
+																				{% ifequal el.user_id|stringformat:"s" stud.authentication_user_id|stringformat:"s" %}
+																					<tr>																					
+																						<td>
+																							{{ att.attendance_day }}
+																						</td>
+																						<td>
+																							{{ att.class_datetime }}
+																						</td>
+																						<td>
+																							--
+																						</td>
+																						<td>
+																							--
+																						</td>
+																						<td>
+																							{{ att.hours_rendered }}
+																						</td>
+																					</tr>
+																				{% endifequal %}
+																			{% endifequal %}
+																		{% endfor %}
+																	{% endfor %}
+																</tbody>
+															</table>
+														</div>
+														
+													</div> <!-- modal-body -->
+												
+													<div class = "modal-footer">
+														<button type = "button" class = "btn btn-danger" data-dismiss = "modal">Close</button>
+													</div>
+													
+													</div> <!-- modal-content -->
+												
+											</div> <!-- modal-view-schedule-student -->
+									
+									
+										
+										
+											<div class = "modal fade in" id = "modal-view-payment-details-student-{{ stud.authentication_user_id }}">
+												<div class = "modal-dialog">
+													<div class = "modal-content">
+														<div class = "modal-header">
+															<h5 class = "modal-title">
+															
+																<span class = "font-weight-bold">Payment Status of <p>{{ stud.fullname }}</p></span>
+																<p>Course {% get_course_category_by_enrolment_id stud.authentication_user_id enrolmentlist courselist categorylist cartypelist categorytypelist %}</p>
+																
+																{% for st in sales_transaction_list %}
+																	{% if st.user_id == stud.authentication_user_id %}												
+																		
+																		{% ifequal st.for_payment_term|stringformat:"s" "1" %}
+																			{% ifequal st.status|stringformat:"s" "1" %}
+																				
+																				<span class = "badge badge-success"><i class = "fa fa-check"></i> Partial Payment (50%) </span> 
+																				
+																			{% else %}
+																			
+																				<span class = "badge badge-warning"><i class = "fa fa-exclamation"></i> Partial Payment (50%) </span> 
+																				
+																			
+																			{% endifequal %}
+																		{% endifequal %}
+																		
+																		{% ifequal st.for_payment_term|stringformat:"s" "2" %}
+																			{% ifequal st.status|stringformat:"s" "1" %}
+																				
+																				<span class = "badge badge-success text-uppercase"><i class = "fa fa-check"></i> Full Payment (100%) </span>  
+																				
+																			{% else %}
+																			
+																				<span class = "badge badge-warning text-uppercas"><i class = "fa fa-exclamation"></i>  Full Payment (100%) 	 </span>								
+																			
+																			{% endifequal %}
+																		{% endifequal %}
+																		
+																	{% else %}														
+																		
+																	{% endif %}
+																{% endfor %}	
+																		
+															</h5>
+															
+														</div>
+														<div class = "modal-body">						
+																													
+																<h6> {%  hide_if_no_sales_transaction_user 'No Sales Transaction Found' stud.authentication_user_id sales_transaction_list  %} </h6>					
+																<div id="content" class = "{% hide_if_no_sales_transaction_user 'd-none' stud.authentication_user_id sales_transaction_list %}">
+																	<ul class="timeline">																	
+																		
+																		
+																		{% for st in sales_transaction_list %}
+																			{% if st.user_id == stud.authentication_user_id %}																		
+																				
+																				{% ifequal st.status|stringformat:"s" "0" %}
+																					
+																					<li class="event" data-date="{{ st.datetime_paid }}">
+																							
+																						<h6>
+																							<small>
+																								<span class = "font-weight-bold">{% get_payment_term_status2 st.for_payment_term|stringformat:"s" %}</span>
+																								Sent Thru <span class = "font-weight-bold">{% get_payment_method_by_id st.payment_method|stringformat:"s" paymentmethod_list %}</span> 
+																							</small>
+																						</h6>	
+																					
+																						<h6><span class = "font-weight-bold ">Reference Number</span></h6>
+																						<p>{{ st.payment_reference_no }}</p>
+																					
+																					</li>	
+																					
+																				{% endifequal %}
+																				
+																				{% ifequal st.status|stringformat:"s" "1" %}																								
+																																										
+																						<li class="event" data-date="{{ st.datetime_paid }}">
+																							
+																							<h6>
+																								<small>
+																								
+																									<span class = "font-weight-bold">{% get_payment_term_status2 st.for_payment_term|stringformat:"s" %}</span>
+																									<p>Sent Thru <span class = "font-weight-bold">{% get_payment_method_by_id st.payment_method paymentmethod_list %}</span> </p>
+																								</small>
+																							</h6>	
+																							
+																							<small>
+																								<h6><small class = "font-weight-bold">Reference Number</small></h6>
+																								<p>{{ st.payment_reference_no }}</p>
+																							</small>
+																							
+																							<small>
+																								<h6><small class = "font-weight-bold">Amount Paid</small></h6>
+																								<p>PHP {{ st.amount_paid | floatformat:2 | intcomma }}</p>
+																							</small>
+																							
+																							<small>
+																								<h6><small class = "font-weight-bold">Balance</small></h6>
+																								<p>PHP {{ st.amount_balance | floatformat:2 | intcomma }}</p>
+																							</small>
+																							
+																						</li>
+																						
+																				{% endifequal %}
+																				
+																				{% if st.status != 1 and st.for_payment_term != 2 %}
+																					<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-declare-payment-{{users.id}}"> Declare Payment </button>
+																				{% endif %}		
+
+																				{% if st.status != 1 and st.for_payment_term != 1 %}
+																					<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-declare-payment-full-{{users.id}}"> Declare Payment </button>
+																				{% endif %}	
+																				
+																			{% endif %}
+																		{% endfor %}
+																													
+																		
+																	</ul>
+																</div>	
+																
+														</div> <!-- modal-body -->
+													</div> <!-- modal-content -->
+												</div> <!-- modal-dialog -->
+											</div> <!-- modal fade in // modal view payment details student -->
+									
+									<div class = "modal fade in" id = "modal-image-{{ stud.id }}">
+											<div class = "modal-dialog">
+												<div class = "modal-content">
+													<div class = "modal-header">
+														<h4>Student Information</h4>
+														<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>																
+													</div>
+													<div class = "modal-body text-center">
+														
+															<img src = "{% static 'student_page/img/account_image/1.jpg' %}" height = "150px" class = "img img-responsive rounded-circle m-1 my-4"/>
+															<h4 class = "text-uppercase font-weight-bold text-gray-900"> {{ stud.fullname }} </h4>																  
+															<h6><small>  Username {{ stud.username }}<br/>Date/Time Registered: {{ stud.datetime_registered }} </small></h6>
+															
+															<h6>
+																Birthdate: {% convert_readable_date stud.birthdate %} | Age: {% get_age stud.birthdate %}
+															</h6>
+															
+															<a href="#" class="btn btn-success btn-icon-split my-3">
+																<span class="icon text-white-50">
+																 <small> @</small>
+																</span>
+																<span class="text"><small>{{ stud.email_address }}</small></span>
+															</a>
+															
+															<a href="#" class="btn btn-danger btn-icon-split">
+																<span class="icon text-white-50">
+																 <small><i class = "fa fa-mobile"></i></small>
+																</span>
+																<span class="text"><small>{{ stud.contact_number }}</small></span>
+															</a>															
+															
+															
+															<div class = "card shadow">
+																<div class = "card-header">
+																	<h6 class = "card-title font-weight-bold text-gray-800">Complete Address</h6>
+																</div>
+																<div class = "card-body">
+																	{{ stud.complete_address }}
+																</div>
+															</div>
+														
+													</div>
+												
+												</div>
+											</div>
+										</div> <!-- modal image (user information) -->
+																				
+								</td>
+							</tr>
+							
+							{% endfor %}
+							
+						</tbody>
+					</table> <!-- table student records (on-going) -->
+					
+					</div> <!-- table responsive -->
+				  </div> <!-- on going tab -->
+				  
+				  <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+				  
+				  
+				  </div> <!-- completed tab -->
+				 
+				</div> <!-- tab-content students On-Going | Completed -->                         
+				
+			</div>
+		</div>
+
+	</div>
+	<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+{% endblock %}

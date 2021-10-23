@@ -1,0 +1,107 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Skills Assessment Reports</h1>
+					
+                    <p class="mb-4">
+						Report for All Students' Skills Assessments
+					</p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">Skills Assessments</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Full Name</th>
+                                            <th>Course</th>
+                                            <th>Contact Details</th>
+                                            <th>Age</th>
+                                            <th>Start Date</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+											<th>#</th>
+                                            <th>Full Name</th>
+                                            <th>Course</th>
+                                            <th>Contact Details</th>
+                                            <th>Age</th>
+                                            <th>Start Date</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </tfoot>
+									
+                                    <tbody>                                     
+										
+										{% for users in userlist %}
+										
+										 <tr>
+                                            <td>{{ users.lastname }}, {{ users.firstname }}</td>
+                                            <td>Course</td>
+                                            <td>
+												{{ users.email_address }} | {{ users.contact_number }}
+											</td>
+                                            <td>21</td>
+                                            <td>2021/04/25</td>
+                                            <td>
+											
+												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">Edit</button>
+												
+												<div class = "modal fade in" id = "modal-edit-student-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold"> {{ users.lastname }}, {{ users.firstname }} </h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action  = "admin_page/add_user">
+																	{% csrf_token %}
+																	<div class = "form-group">
+																		<label id = "firstname">First Name</label>
+																		<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
+																	</div>
+																	<div class = "form-group">
+																		<label id = "lastname">Last Name</label>
+																		<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
+																	</div>
+																	<div class = "form-group">																		
+																		<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											
+											</td>
+                                        </tr>
+										
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

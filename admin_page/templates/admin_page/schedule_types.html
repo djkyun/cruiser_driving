@@ -1,0 +1,168 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800"><span class = "font-weight-bold">Schedule Types</span> 
+						
+						<p class="mb-4">
+							<small>List of all Schedule Types</small>
+						</p>
+					
+						</h1>
+						
+                        <a href="appointments_admin" class="d-none d-sm-inline-block btn btn-lg btn-outline-danger shadow-sm">
+							<i class="fas fa-arrow-left fa-sm text-danger-900"></i> Back to Appointments
+						</a>
+						
+                    </div>
+								
+					{% for message in messages %}
+						<h4 class = "alert alert-success alert-dismissible fade show" role = "alert">
+							<strong> {{ message }} </strong>
+							<button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+								<span aria-hidden = "true"> &times; </span>
+							</button>
+						</h4>
+					{% endfor %}
+
+
+					<div class = "modal fade in" id = "modal-add-schedule-type">
+						<div class = "modal-dialog">
+							<div class = "modal-content">
+								<div class = "modal-header">
+									<h2 class = "text-uppercase font-weight-bold"> Add New Schedule Type </h2>
+								</div>
+								<div class = "modal-body">
+									<form method = "POST" action  = "add_schedule_type">
+										{% csrf_token %}
+										
+										<input type = "hidden" name = "admin_id" value = "{{ user_id }}"/>
+										
+										<div class = "form-group">
+										
+											<label for = "label">
+												<h5 class = "font-weight-bold text-gray-900">
+													Scheduled Days<br>
+													<small>Input Days of the Week for Class</small>
+												</h5>
+											</label>
+											
+											<div class = "form-check">
+												<input type = "checkbox" id = "monday" value = "MON" class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "monday">Monday</label>
+											</div>
+											<div class = "form-check">
+												<input type = "checkbox" id = "tuesday" value = "TUE"  class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "tuesday">Tuesday</label>
+											</div>
+											<div class = "form-check">
+												<input type = "checkbox" id = "wednesday" value = "WED"  class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "wednesday">Wednesday</label>
+											</div>
+											<div class = "form-check">
+												<input type = "checkbox" id = "thursday" value = "THU"  class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "thursday">Thursday</label>
+											</div>
+											<div class = "form-check">
+												<input type = "checkbox" id = "friday" value = "FRI"  class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "friday">Friday</label>
+											</div>
+											<div class = "form-check">
+												<input type = "checkbox" id = "saturday" value = "SAT"  class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "saturday">Saturday</label>
+											</div>
+											<div class = "form-check">
+												<input type = "checkbox" id = "sunday" value = "SUN"  class = "form-check-input" name = "scheduled_day"/>
+												<label class = "form-check-label" for = "sunday">Sunday</label>
+											</div>
+										</div>
+										<div class = "form-group">
+											<label for = "label"><span class = "text-gray-900 font-weight-bold">Hours Per Day</span></label>	
+											<input type = "number" min = "1" placeholder = "" class = "form-control" name = "hours_per_day"/>
+										</div>												
+										
+										<div class = "form-group">																		
+											<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">
+							
+							List of Schedule Types
+							
+							<a href="#" class="d-none d-sm-inline-block btn btn-lg btn-danger float-right shadow-sm" data-toggle = "modal" data-target = "#modal-add-schedule-type">
+								<i class="fas fa-plus fa-sm text-white-50"></i> Add Schedule Type
+							</a>
+							
+							</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>                                          
+                                            <th>Days</th>                                                                                      
+                                            <th>Hours per Day</th>                                                                                      
+                                            <th>Added By</th>                                                                                      
+                                            <th>Status</th>                                                                                      
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>                                
+									
+                                    <tbody>                                     
+										
+										{% for sched in schedule_type_list %}
+										
+										 <tr>
+                                            <td>{{ forloop.counter }}</td>                                            
+                                            <td>
+												{{ sched.schedules }}
+											</td>
+											<td>
+												{{ sched.hours_per_day }}
+											</td>
+											<td>
+											
+												{{ sched.added_by }}
+												{% get_username sched.added_by user_list %}										
+												
+											</td>
+                                            <td>{% label_status sched.status %}</td>                                           
+                                            <td>
+											
+												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-appointment-{{ al.id }}">Edit</button>
+																	
+											
+											</td>
+                                        </tr>
+										
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

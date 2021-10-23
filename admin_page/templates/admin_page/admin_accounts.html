@@ -1,0 +1,339 @@
+
+	{% extends 'admin_page/base.html' %}
+	{% block body %}
+	{% load static %}
+	{% load admin_templatetags %}
+	
+	<!-- Begin Page Content -->
+	<div class="container-fluid">
+
+		<!-- Page Heading -->
+		<h1 class="h3 mb-2 text-gray-900 font-weight-bold">Admin and Staff Accounts</h1>
+		
+		<p class="mb-4">
+			List of All Admin and Staff Accounts
+		</p>
+
+			<!-- DataTales Example -->
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h5 class="m-0 font-weight-bold text-inverse text-gray-700">Admin Counts ({{ student_counts }})</h5>
+				</div>
+				<div class="card-body">
+				
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+				  <li class="nav-item" role="presentation">
+					<a class="nav-link active" id="ongoing-tab" data-toggle="tab" href="#ongoing" role="tab" aria-controls="ongoing" aria-selected="true">On-Going</a>
+				  </li>
+				  <li class="nav-item" role="presentation">
+					<a class="nav-link" id="completed-tab" class = "text-gray-900" data-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Completed</a>
+				  </li>						  
+				</ul>
+				
+				<div class="tab-content" id="myTabContent">
+				
+				  <div class="tab-pane fade show active" id="ongoing" role="tabpanel" aria-labelledby="ongoing-tab">
+				  
+				   <div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Full Name</th>
+								<th>Course</th>
+								<th>Contact Details</th>
+								<th>Age</th>
+								<th>Start Date</th>
+								<th>Options</th>
+							</tr>
+						</thead>                                  
+						
+						<tbody>                                     
+							
+							{% for stud in student_list %}
+							
+							 <tr>
+								<td>{{ forloop.counter }}</td>
+								<td>
+								<a data-toggle = "modal" role = "button" data-target = "#modal-image-{{users.id}}">{{ stud.fullname }}</a>
+								</td>
+								<td>{% get_course_category_by_enrolment_id stud.authentication_user_id enrolmentlist courselist categorylist cartypelist categorytypelist %}</td>
+								<td>
+									{{ stud.email_address }} | {{ stud.contact_number }}
+								</td>
+								<td>{% get_age stud.birthdate %} y/o </td>
+								<td>{{ stud.datetime_registered }}</td>
+								<td>
+								
+									<button type = "button" class = "btn btn-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-grades-student-{{ stud.id }}">View Grades</button>
+									<button type = "button" class = "btn btn-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-schedule-student-{{ stud.id }}">View Schedules</button>
+									
+									<div class = "modal fade in" id = "modal-view-grades-student-{{ stud.id }}">
+										<div class = "modal-dialog">
+											<div class = "modal-content">
+												<div class = "modal-header">
+													<h2 class = "text-uppercase font-weight-bold"> View Grades {{ stud.fullname }} </h2>
+												</div>
+												<div class = "modal-body">
+													<form method = "POST" action  = "admin_page/add_user">
+														{% csrf_token %}
+														<div class = "form-group">
+															<label id = "firstname">First Name</label>
+															<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
+														</div>
+														<div class = "form-group">
+															<label id = "lastname">Last Name</label>
+															<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
+														</div>
+														<div class = "form-group">																		
+															<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div> <!-- modal-view-grades-student -->
+									
+									<div class = "modal fade in" id = "modal-view-schedule-student-{{ stud.id }}">
+										<div class = "modal-dialog">
+											<div class = "modal-content">
+												<div class = "modal-header">
+													<h2 class = "text-uppercase font-weight-bold"> View Schedule {{ stud.fullname }} </h2>
+												</div>
+												<div class = "modal-body">
+													<form method = "POST" action  = "admin_page/add_user">
+														{% csrf_token %}
+														<div class = "form-group">
+															<label id = "firstname">First Name</label>
+															<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
+														</div>
+														<div class = "form-group">
+															<label id = "lastname">Last Name</label>
+															<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
+														</div>
+														<div class = "form-group">																		
+															<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div> <!-- modal-view-schedule-student -->
+									
+									<div class = "modal fade in" id = "modal-image-{{ users.id }}">
+											<div class = "modal-dialog">
+												<div class = "modal-content">
+													<div class = "modal-header">
+														<h4>Student Information</h4>
+														<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>																
+													</div>
+													<div class = "modal-body text-center">
+														
+															<img src = "{% static 'student_page/img/account_image/1.jpg' %}" height = "150px" class = "img img-responsive rounded-circle m-1 my-4"/>
+															<h4 class = "text-uppercase font-weight-bold text-gray-900"> {{ stud.fullname }} </h4>																  
+															<h6><small>  Username {% get_username users.authentication_user_id User_list %}<br/>Date/Time Registered: {{ stud.datetime_registered }} </small></h6>
+															
+															<h6>
+																Birthdate: {% convert_readable_date stud.birthdate %} | Age: {% get_age stud.birthdate %}
+															</h6>
+															
+															<a href="#" class="btn btn-success btn-icon-split my-3">
+																<span class="icon text-white-50">
+																 <small> @</small>
+																</span>
+																<span class="text"><small>{{ stud.email_address }}</small></span>
+															</a>
+															
+															<a href="#" class="btn btn-danger btn-icon-split">
+																<span class="icon text-white-50">
+																 <small><i class = "fa fa-mobile"></i></small>
+																</span>
+																<span class="text"><small>{{ stud.contact_number }}</small></span>
+															</a>															
+															
+															
+															<div class = "card shadow">
+																<div class = "card-header">
+																	<h6 class = "card-title font-weight-bold text-gray-800">Complete Address</h6>
+																</div>
+																<div class = "card-body">
+																	{{ stud.complete_address }}
+																</div>
+															</div>
+														
+													</div>
+												
+												</div>
+											</div>
+										</div> <!-- modal image (user information) -->
+																				
+								</td>
+							</tr>
+							
+							{% endfor %}
+							
+						</tbody>
+					</table> <!-- table student records (on-going) -->
+					
+					</div> <!-- table responsive -->
+				  </div> <!-- on going tab -->
+				  
+				  <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+				  
+				   <div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Full Name</th>
+								<th>Course</th>
+								<th>Contact Details</th>
+								<th>Age</th>
+								<th>Start Date</th>
+								<th>Options</th>
+							</tr>
+						</thead>                                  
+						
+						<tbody>                                     
+							
+							{% for stud_complete in student_list_completed %}
+							
+							 <tr>
+								<td>{{ forloop.counter }}</td>
+								<td>
+								<a data-toggle = "modal" role = "button" data-target = "#modal-image-{{users.id}}">{{ stud_complete.fullname }}</a>
+								</td>
+								<td>{% get_course_category_by_enrolment_id stud_complete.authentication_user_id enrolmentlist courselist categorylist cartypelist categorytypelist %}</td>
+								<td>
+									{{ stud_complete.email_address }} | {{ stud_complete.contact_number }}
+								</td>
+								<td>{% get_age stud_complete.birthdate %} y/o </td>
+								<td>{{ stud_complete.datetime_registered }}</td>
+								<td>
+								
+									<button type = "button" class = "btn btn-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-grades-student-{{ stud_complete.id }}">View Grades</button>
+									<button type = "button" class = "btn btn-success btn-sm m-1" data-toggle = "modal" data-target = "#modal-view-schedule-student-{{ stud_complete.id }}">View Schedules</button>
+									
+									<div class = "modal fade in" id = "modal-view-grades-student-{{ stud_complete.id }}">
+										<div class = "modal-dialog">
+											<div class = "modal-content">
+												<div class = "modal-header">
+													<h2 class = "text-uppercase font-weight-bold"> View Grades {{ stud_complete.fullname }} </h2>
+												</div>
+												<div class = "modal-body">
+													<form method = "POST" action  = "admin_page/add_user">
+														{% csrf_token %}
+														<div class = "form-group">
+															<label id = "firstname">First Name</label>
+															<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
+														</div>
+														<div class = "form-group">
+															<label id = "lastname">Last Name</label>
+															<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
+														</div>
+														<div class = "form-group">																		
+															<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div> <!-- modal-view-grades-student -->
+									
+									<div class = "modal fade in" id = "modal-view-schedule-student-{{ stud_complete.id }}">
+										<div class = "modal-dialog">
+											<div class = "modal-content">
+												<div class = "modal-header">
+													<h2 class = "text-uppercase font-weight-bold"> View Schedule {{ stud_complete.fullname }} </h2>
+												</div>
+												<div class = "modal-body">
+													<form method = "POST" action  = "admin_page/add_user">
+														{% csrf_token %}
+														<div class = "form-group">
+															<label id = "firstname">First Name</label>
+															<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
+														</div>
+														<div class = "form-group">
+															<label id = "lastname">Last Name</label>
+															<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
+														</div>
+														<div class = "form-group">																		
+															<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div> <!-- modal-view-schedule-student -->
+									
+									<div class = "modal fade in" id = "modal-image-{{ users.id }}">
+											<div class = "modal-dialog">
+												<div class = "modal-content">
+													<div class = "modal-header">
+														<h4>Student Information</h4>
+														<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>																
+													</div>
+													<div class = "modal-body text-center">
+														
+															<img src = "{% static 'student_page/img/account_image/1.jpg' %}" height = "150px" class = "img img-responsive rounded-circle m-1 my-4"/>
+															<h4 class = "text-uppercase font-weight-bold text-gray-900"> {{ stud_complete.fullname }} </h4>																  
+															<h6><small>  Username {% get_username stud_complete.authentication_user_id User_list %}<br/>Date/Time Registered: {{ stud_complete.datetime_registered }} </small></h6>
+															
+															<h6>
+																Birthdate: {% convert_readable_date stud_complete.birthdate %} | Age: {% get_age stud_complete.birthdate %}
+															</h6>
+															
+															<a href="#" class="btn btn-success btn-icon-split my-3">
+																<span class="icon text-white-50">
+																 <small> @</small>
+																</span>
+																<span class="text"><small>{{ stud_complete.email_address }}</small></span>
+															</a>
+															
+															<a href="#" class="btn btn-danger btn-icon-split">
+																<span class="icon text-white-50">
+																 <small><i class = "fa fa-mobile"></i></small>
+																</span>
+																<span class="text"><small>{{ stud_complete.contact_number }}</small></span>
+															</a>															
+															
+															
+															<div class = "card shadow">
+																<div class = "card-header">
+																	<h6 class = "card-title font-weight-bold text-gray-800">Complete Address</h6>
+																</div>
+																<div class = "card-body">
+																	{{ stud_complete.complete_address }}
+																</div>
+															</div>
+														
+													</div>
+												
+												</div>
+											</div>
+										</div> <!-- modal image (user information) -->
+																				
+								</td>
+							</tr>
+							
+							{% endfor %}
+							
+						</tbody>
+					</table> <!-- table student records (on-going) -->
+					
+					</div> <!-- table responsive -->
+					
+				  </div> <!-- completed tab -->
+				 
+				</div> <!-- tab-content students On-Going | Completed -->                         
+				
+			</div>
+		</div>
+
+	</div>
+	<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+{% endblock %}

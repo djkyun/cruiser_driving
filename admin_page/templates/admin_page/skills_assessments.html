@@ -1,0 +1,155 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				{% load humanize %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                      <!-- Page Heading -->
+                      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-900"><span class = "font-weight-bold">Skills Assessments</span> 
+						
+						<p class="mb-4">
+							<small>Detailed List of Student's Skills Assessments</small>
+						</p>
+					
+						</h1>
+						
+                        <a href="lessons_admin" class="d-none d-sm-inline-block btn btn-lg btn-outline-danger shadow-sm">
+							<i class="fas fa-list fa-sm text-danger-900"></i> Lessons
+						</a>
+						
+                    </div>
+				
+					<h5 class = "alert alert-warning alert-dismissable {% has_records '' 'd-none' userlist %}">
+						{% has_records_note 'No Skills Assessments Record Found' '' userlist %}
+						<a class = "btn btn-inverse btn-sm" aria-label = "close" data-dismiss = "alert"><span aria-hidden = "true">x</span></a>
+					</h5>
+					
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4 {% has_records 'd-none' '' userlist %}">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">Assessments</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Full Name</th>
+                                            <th>Course</th>
+                                            <th>Contact Details</th>
+                                            <th>Age</th>
+                                            <th>Start Date</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>                                   
+									
+                                    <tbody>                                     
+										
+										{% for users in userlist %}
+										
+										 <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>
+											
+												<a data-toggle = "modal" role = "button" data-target = "#modal-image-{{users.id}}">{{ users.lastname }}, {{ users.firstname }}</a>
+											
+											</td>
+                                            <td>
+												{% get_course_category_by_enrolment_id users.authentication_user_id enrolment_list courselist categorylist cartypelist categorytypelist %}
+											</td>
+                                            <td>
+												{{ users.email_address }} | {{ users.contact_number }}
+											</td>
+                                            <td>{% get_age users.birthdate %}</td>
+                                            <td>2021/04/25</td>
+                                            <td>
+											
+												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">View Assessment</button>
+												
+												<div class = "modal fade in" id = "modal-edit-student-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold"> {{ users.lastname }}, {{ users.firstname }} </h2>
+															</div>
+															<div class = "modal-body">
+																<h3>
+																	Skills Assessment of {{ users.fullname }}
+																</h3>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											
+											</td>
+                                        </tr>
+										
+										<div class = "modal fade in" id = "modal-image-{{ users.id }}">
+											<div class = "modal-dialog">
+												<div class = "modal-content">
+													<div class = "modal-header">
+														<h4>Student Information</h4>
+														<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>																
+													</div>
+													<div class = "modal-body text-center">
+														
+															<img src = "{% static 'student_page/img/account_image/1.jpg' %}" height = "150px" class = "img img-responsive rounded-circle m-1 my-4"/>
+															<h4 class = "text-uppercase font-weight-bold text-gray-900"> {{ users.fullname }} </h4>																  
+															<h6><small>  Username {% get_username users.authentication_user_id User_list %}<br/>Date/Time Registered: {{ users.datetime_registered }} </small></h6>
+															
+															<h6>
+																Birthdate: {% convert_readable_date users.birthdate %} | Age: {% get_age users.birthdate %}
+															</h6>
+															
+															<a href="#" class="btn btn-success btn-icon-split my-3">
+																<span class="icon text-white-50">
+																 <small> @</small>
+																</span>
+																<span class="text"><small>{{ users.email_address }}</small></span>
+															</a>
+															
+															<a href="#" class="btn btn-danger btn-icon-split">
+																<span class="icon text-white-50">
+																 <small><i class = "fa fa-mobile"></i></small>
+																</span>
+																<span class="text"><small>{{ users.contact_number }}</small></span>
+															</a>															
+															
+															
+															<div class = "card shadow">
+																<div class = "card-header">
+																	<h6 class = "card-title font-weight-bold text-gray-800">Complete Address</h6>
+																</div>
+																<div class = "card-body">
+																	{{ users.complete_address }}
+																</div>
+															</div>
+														
+													</div>
+												
+												</div>
+											</div>
+										</div> <!-- modal image (user information) -->
+												
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

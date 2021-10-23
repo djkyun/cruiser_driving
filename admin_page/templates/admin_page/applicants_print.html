@@ -1,0 +1,181 @@
+
+			<body onload = "javascript:window.print();">
+				
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+	
+	
+
+
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Applicants</h1>
+					
+                    <p class="mb-4">
+						{{ print_title }}		
+						
+					</p>
+					
+								
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+						
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">
+							
+								
+						
+							</h5>
+						
+                        </div>
+                        <div class="card-body">
+						
+
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th><strong>#</strong></th>
+                                            <th><strong>Full Name</strong></th>
+                                            <th>Course</th>                                          
+                                            <th>Age</th>
+                                            <th>Date Registered</th>
+                                            <th>Payment Method</th>                                            
+                                            <th>Payment Term</th>
+											<th>Payment Status</th>
+                                            <th>Course Fee</th>                                            
+                                        </tr>
+                                    </thead>                                   
+									
+                                    <tbody>                                     
+										
+										{% for users in userlist %}										
+										
+										
+										 <tr>
+                                            <td> {{ forloop.counter }} </td>
+                                            <td>
+											
+											<br/>{{ users.lastname }}, {{ users.firstname }}
+											
+											</td>
+											
+                                            <td>										
+																						
+													
+												{% for enrol in enrolment_list %}
+													{% if enrol.user_id == users.authentication_user_id %}
+													
+														{% get_course_name_by_id enrol.enrolled_course|stringformat:"s" courselist %}
+														
+													{% endif %}
+												{% endfor %}		
+											
+											
+											</td>
+                                           
+                                            <td>{% get_age users.birthdate %}</td>
+                                            <td>{{ users.datetime_registered }}</td>
+											
+                                            <td>
+											
+										
+											{% for transac in enrolment_list %}
+												{% if transac.user_id == users.authentication_user_id %}
+																
+													
+													<span class = "badge badge-success"><i class = "fa fa-check"></i></span>
+													
+													<strong>
+														<span class = "text-uppercase">
+															{% get_payment_method_by_id transac.payment_method|stringformat:"s" paymentmethod_list %}
+														</span>
+													</strong>
+													
+												
+												{% endif %}
+											{% endfor %}		
+											
+										
+											</td>
+											
+                                            <td>
+											
+												{% for st in sales_transaction_list %}
+													{% if st.user_id == users.authentication_user_id %}												
+														
+														{% ifequal st.for_payment_term|stringformat:"s" "1" %}
+															{% ifequal st.status|stringformat:"s" "1" %}
+																
+																<span class = "badge badge-success"><i class = "fa fa-check"></i></span> Partial Payment Done (50%) <br/>
+																
+															{% else %}
+															
+																<span class = "badge badge-warning"><i class = "fa fa-exclamation"></i></span> Partial Payment (50%) <br/>
+																
+															
+															{% endifequal %}
+														{% endifequal %}
+														
+														{% ifequal st.for_payment_term|stringformat:"s" "2" %}
+															{% ifequal st.status|stringformat:"s" "1" %}
+																
+																<span class = "badge badge-success"><i class = "fa fa-check"></i></span> Full Payment Done (100%) <br/>
+																
+															{% else %}
+															
+																<span class = "badge badge-warning"><i class = "fa fa-exclamation"></i></span> Full Payment (100%) <br/>																
+															
+															{% endifequal %}
+														{% endifequal %}
+														
+													{% else %}	
+
+														
+														
+													{% endif %}
+												{% endfor %}			
+												
+													
+										
+													
+											</td>
+											
+											<td>
+												
+												
+													
+											</td>
+											
+											<td>
+												{% for transac in enrolment_list %}
+													{% if transac.user_id == users.authentication_user_id %}
+														PHP {{ transac.amount | floatformat:2 }}
+													{% endif %}
+												{% endfor %}	
+											</td>
+                                         
+                                        </tr>
+										
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}
+			
+			</body>

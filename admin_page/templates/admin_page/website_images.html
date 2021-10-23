@@ -1,0 +1,197 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Website Images</h1>
+					
+                    <p class="mb-4">
+						Images Seen from Website
+					</p>
+					
+					<div class = "form-group" style = "display:none;">																	
+									
+						<h4 class = "text-center p-4">Team Image</h4>
+						
+						<input type="file" style = "display:none;" class = "form-control" accept = "image/*" name = "image" id  = "upload_product_image" value="Choose a file">
+						
+						<div id="uploadpic_product_image" class = "btn-upload"></div>
+						<input type="hidden" id="imagebase64_product_image" name="imagebase64_product_image">	
+					
+					</div>	
+								
+					<script type = "text/javascript" src="{% static 'admin_page/croppie/js/croppie/croppie.js' %}"></script>		
+				  
+					<script type = "text/javascript">
+												
+						$(document).ready(function(){
+																				
+							var $uploadCrop_ProductImage;							
+												
+
+							function readFile_ProductImage(input)
+							{
+								if (input.files && input.files[0])
+								{
+									var reader = new FileReader();          
+									reader.onload = function (e) {
+										$uploadCrop_ProductImage.croppie('bind', {
+											url: e.target.result
+										});
+										$('.upload-demo').addClass('ready');
+									}           
+									reader.readAsDataURL(input.files[0]);
+								}
+							}	
+							
+							
+							$uploadCrop_ProductImage = $('#uploadpic_product_image').croppie({
+								viewport: {
+									width: 200,
+									height: 200		
+								},
+								boundary: {
+									width: 250,
+									height: 250
+								}
+							});		
+						
+
+							$('#upload_product_image').on('change', function () { readFile_ProductImage(this); });
+							
+							
+								$('.upload-result').on('click', function (ev) {
+									
+									$uploadCrop_ProductImage.croppie('result', {
+										type: 'canvas',
+										size: 'original'
+									}).then(function (resp) {
+										$('#imagebase64_product_image').val(resp);
+										
+																					
+								});
+									
+									
+							});
+																
+							var cnt = 0;									
+							
+							$('.btn-upload').on('click',function(){
+								
+								if(cnt > 0)
+								{
+									
+								}
+								else
+								{
+									$('#upload_product_image').click();
+									cnt+=1;
+								}					
+								
+								
+							});								
+															
+						
+							$('.btn-upload').css("cursor","pointer");					
+						
+				
+						});						
+						
+
+					</script>	
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">Images</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>System Name</th>
+                                            <th>System Value</th>
+                                            <th>Other Value</th>
+                                            <th>Update Details</th>                                            
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>System Name</th>
+                                            <th>System Value</th>
+                                            <th>Other Value</th>
+                                            <th>Update Details</th>                                            
+                                            <th>Options</th>
+                                        </tr>
+                                    </tfoot>
+									
+                                    <tbody>                                     
+										
+										{% for system_setting in systemn_settings_list %}
+										
+										 <tr>
+                                            <td>1</td>
+                                            <td>{{ system_setting.system_name }}</td>
+                                            <td>{{ system_setting.system_value }}</td>
+                                            <td>{{ system_setting.system_other_value }}</td>
+											
+                                            <td>
+												Updated By {{ system_setting.updated_by }} <br/>
+												<small>Last Update {{ system_setting.datetime_last_update }}</small>
+											</td>
+											
+                                            <td>
+											
+												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-system-settings-{{ system_setting.id }}">Edit</button>
+												
+												<div class = "modal fade in" id = "modal-edit-system-settings-{{ system_setting.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold"> {{ system_setting.system_name }} </h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action  = "update_system_settings">
+																	{% csrf_token %}
+																	
+																	<div class = "form-group">
+																		<label id = "system_name">{{ system_setting.system_name }}</label>
+																		<input type = "text" id = "system_name" value = "{{ system_setting.system_value }}" class = "form-control" placeholder = "System Value" name = "system_value"/>
+																	</div>
+																	
+																	<div class = "form-group">																		
+																		<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											
+											</td>
+                                        </tr>
+										
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

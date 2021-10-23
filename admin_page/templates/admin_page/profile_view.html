@@ -1,0 +1,250 @@
+   
+   
+		{% extends 'admin_page/base.html' %}
+		{% block body %}
+		{% load static %}
+		
+		<!-- Begin Page Content -->
+        <div class="container-fluid">
+				
+	
+		
+		
+		<?php
+		
+			$account_image 					= "1.jpg";
+			$is_account_activated 			= "1";
+			$verified_by 					= 1;
+			$is_email_verified 				= 1;
+			$role_id		 				= 1;
+			
+			$email_address 					= $email;
+			$contact_number 				= $phone;		
+			
+			
+			
+		?>
+		
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800"><b>Profile</b></h1>
+          <p class="mb-4">Your Profile Information</p>
+        
+
+		
+          <div class="row">
+     
+
+			
+				  
+            <!-- Pie Chart -->
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-black">{{ role_name }} Account</h6>
+				  
+				  
+				  
+					<div class="dropdown no-arrow">
+						<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+						  <div class="dropdown-header">Options</div>
+						  <a class="dropdown-item" data-toggle = "modal" data-target = "#change-photo">Change Photo</a>				  
+						  <a class="dropdown-item" data-toggle = "modal" data-target = "#change-info">Edit General Information</a>				  
+						</div>					
+					</div>
+					
+                </div>
+		
+				
+                <!-- Card Body -->
+                <div class="card-body">
+				
+				
+                  <div class="chart-pie pt-4 pb-2">
+					<center>
+						<img class = "img rounded-circle" height = "210px" src = "{% static 'admin_page/img/cruiser-driving.jpg' %}"/>
+					</center>	
+				  </div>
+				
+				  <div class = "mt-1 text-center medium">
+					<span class=  "mr-3">					
+						
+						
+						<b>{{ fullname }}</b><br>
+						<small>Registered Since: {{date_registered}}</small>
+					
+					</span>
+				  </div>
+				  
+                  <div class="mt-4 text-center small">			  
+							  
+                    <span class="mr-2">
+					
+						<a href="#" class="btn btn-success btn-icon-split">
+							<span class="icon text-white-50">
+							 <small> @</small>
+							</span>
+							<span class="text"><small>{{ email_address }}</small></span>
+						</a>
+
+                     
+                    </span>
+					
+                    <span class="mr-2">		
+					
+						<a href="#" class="btn btn-danger btn-xs btn-icon-split">
+							<span class="icon text-white-50">
+							  <small><i class="fas fa-user"></i></small>
+							</span>
+							<span class="text"><small>{{ username }}</small></span>
+						</a>
+						
+					  
+                    </span>
+					
+                   
+					
+                  </div>
+                </div>
+              </div>
+            </div>
+			
+			 <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-default">Information</h6>
+                 
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+					<h4><i class = "fa fa-map-marker text-success"></i> <b>Address</b> <br> 
+					
+					<small>{{ complete_address }}</small>
+					
+					</h4>
+					
+					<h4><i class = "fa fa-phone text-success"></i> <b>Contact Number</b> <br> 
+					
+					<small>{{ contact_number }}</small>
+					
+					</h4>
+                </div>
+              </div>
+			  
+			  <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-default">Account Status</h6>
+                 
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+					
+					<h4><i class = "fa fa-check-circle text-success"></i> <b>Email Verified</b> <br> 
+					<small><?php echo $email_address; ?></small>
+					</h4>
+									
+					
+					<h4><i class = "fa fa-check-circle text-success"></i> <b>Account Activated</b> <br> 
+					
+					
+					<small>Verified By: Admin </small>
+					
+					
+					</h4>
+					
+					
+					
+					<h4><i class = "fa fa-check-circle text-default"></i> <b>Account Not Yet Activated</b> <br> 
+					
+					<small>Verified By: Admin </small>
+					
+					</h4>
+					
+					
+                </div>
+              </div>
+            </div>
+			
+			
+          </div>
+
+          <!-- Content Row -->
+		  
+		  
+		  <!-- Content Row -->
+          <div class="row">
+						
+           
+					
+					
+				
+					
+						<div class="col-xl-3 col-md-6 mb-4">
+						  <div class="card border-top shadow h-100 py-2">
+							<div class="card-body">
+							  <div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+								
+									<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">course</div>                     
+									<div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
+									
+									</div>
+								<div class="col-auto">
+								 
+								</div>
+							  </div>
+							</div>
+						  </div>
+						</div>
+						
+						
+					
+
+            
+          
+
+            <!-- VIEWED E-BOOKS COUNT -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-top shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Date and Time Last Logged In (Online)</div>
+
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+					  
+					
+						<h5>Login Data from Database Directly Cleared</h5>
+					
+					  
+					  </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-eye fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			
+			
+			
+			
+          </div>
+
+          <!-- Content Row -->
+		  
+		  
+		 
+        </div>
+        <!-- /.container-fluid -->
+
+    	 
+	 
+	 {% endblock %}

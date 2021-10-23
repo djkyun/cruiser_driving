@@ -1,0 +1,848 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				{% load humanize %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">	
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Applicants</h1>
+					
+                    <p class="mb-4">
+						List of All Applicants							
+					</p>		
+						
+					
+						{% for message in messages %}
+							<h4 class = "alert alert-success alert-dismissible fade show" role = "alert">
+								<strong> {{ message }} </strong>
+								<button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+									<span aria-hidden = "true"> &times; </span>
+								</button>
+							</h4>
+						{% endfor %}
+
+						
+                    <!-- DataTales Example -->
+					<h5 class = "alert alert-warning alert-dismissable {% has_records '' 'd-none' userlist %}">
+						{% has_records_note 'No New Applicant' '' userlist %}
+						<a class = "btn btn-inverse btn-sm" aria-label = "close" data-dismiss = "alert"><span aria-hidden = "true">x</span></a>
+					</h5>
+					
+                    <div class="card shadow mb-4 {% has_records 'd-none' '' userlist %}">
+                        <div class="card-header py-3">
+						
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">
+							
+								Applicant Counts ({{ total_number_applicants }})
+							
+								<a target = "_blank" href ="applicants_print" class="d-none d-sm-inline-block btn btn-lg btn-default float-right shadow-sm text-gray-900">
+									<i class="fas fa-print fa-sm"></i> Print
+								</a>
+						
+							</h5>
+						
+                        </div>
+                        <div class="card-body">
+						
+
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th><strong>#</strong></th>
+                                            <th><strong>Full Name</strong></th>
+                                            <th>Course</th>       
+											<th>Course Fee</th>
+                                            <th>Payment Method</th>                                            
+                                            <th>Preferred Payment Term</th>
+											<th>Payment Status</th>                                           
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>                                   
+									
+                                    <tbody>                                     
+										
+										{% for users in userlist %}										
+										
+										
+										 <tr>
+                                            <td> {{ forloop.counter }} </td>
+                                            <td>
+											
+											<img height = "50px" src = "{% static 'student_page/img/account_image/1.jpg' %}" data-toggle = "modal" data-target = "#modal-image-{{users.id}}" class = "img img-responsive rounded-circle m-1"/>
+											<br/>{{ users.fullname }}
+											
+											</td>
+											
+                                            <td>										
+																						
+												{% has_enrolment_record_with_display users.authentication_user_id enrolment_list %}
+												
+												{% get_course_category_by_enrolment_id users.authentication_user_id enrolment_list courselist categorylist cartypelist categorytypelist %}
+											
+											
+											</td>                                           
+                                           
+										   	
+											<td>
+												{% for transac in enrolment_list %}
+													{% if transac.user_id == users.authentication_user_id %}
+														PHP {{ transac.amount | floatformat:2 | intcomma }}
+													{% endif %}
+												{% endfor %}	
+											</td>
+                                          
+											
+                                            <td>
+											
+										
+											{% for transac in enrolment_list %}
+												{% if transac.user_id == users.authentication_user_id %}
+																
+													
+												
+													
+													<strong>
+														<span class = "text-uppercase">
+															{% get_payment_method_by_id transac.payment_method|stringformat:"s" paymentmethod_list %}
+														</span>
+													</strong>
+													
+												
+												{% endif %}
+											{% endfor %}		
+											
+										
+											</td>
+											
+                                            <td>				
+													
+												<small>{% get_payment_term_by_a_user_id users.authentication_user_id enrolment_list %}</small>
+													
+											</td>
+											
+											<td>
+											
+												{% for st in sales_transaction_list %}
+													{% if st.user_id == users.authentication_user_id %}												
+														
+														{% ifequal st.for_payment_term|stringformat:"s" "1" %}
+															{% ifequal st.status|stringformat:"s" "1" %}
+																
+																<span class = "badge badge-success"><i class = "fa fa-check"></i> Partial Payment (50%) </span> 
+																
+															{% else %}
+															
+																<span class = "badge badge-warning"><i class = "fa fa-exclamation"></i> Partial Payment (50%) </span> 
+																
+															
+															{% endifequal %}
+														{% endifequal %}
+														
+														{% ifequal st.for_payment_term|stringformat:"s" "2" %}
+															{% ifequal st.status|stringformat:"s" "1" %}
+																
+																<span class = "badge badge-success text-uppercase"><i class = "fa fa-check"></i> Full Payment (100%) </span>  
+																
+															{% else %}
+															
+																<span class = "badge badge-warning text-uppercas"><i class = "fa fa-exclamation"></i>  Full Payment (100%) 	 </span>								
+															
+															{% endifequal %}
+														{% endifequal %}
+														
+													{% else %}														
+														
+													{% endif %}
+												{% endfor %}	
+												
+												{% for st in sales_transaction_list %}
+													{% if st.user_id == users.authentication_user_id %}
+																				
+														{% if st.status != 1 and st.for_payment_term != 2 %}
+															<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-declare-payment-{{users.id}}"> Declare Payment </button>
+														{% endif %}		
+
+														{% if st.status != 1 and st.for_payment_term != 1 %}
+															<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-declare-payment-full-{{users.id}}"> Declare Payment </button>
+														{% endif %}	
+														
+													{% endif %}
+												{% endfor %}
+																
+												<button type = "button" class = "btn btn-outline-success my-2 btn-sm" data-toggle = "modal" data-target = "#modal-payment-status-details-{{ users.authentication_user_id }}">View Details</button>
+												<button type = "button" class = "btn btn-success btn-sm {% show_declare_payment_cash ' ' 'invisible' users.authentication_user_id  enrolment_list sales_transaction_list %} {% has_enrolment_record users.authentication_user_id enrolment_list %}" data-toggle = "modal" data-target = "#modal-declare-payment-cash-{{users.id}}"> Declare Payment </button>
+													
+											</td>
+											
+											<div class = "modal fade in" id = "modal-payment-status-details-{{ users.authentication_user_id }}">
+												<div class = "modal-dialog">
+													<div class = "modal-content">
+														<div class = "modal-header">
+															<h5 class = "modal-title">
+															
+																<span><small>Payment Status of</small> <p class = "font-weight-bold">{{ users.fullname }}</p></span>
+																
+																<p>
+																	<small>Course</small> 
+																	<br/><span class = "font-weight-bold">{% get_course_category_by_enrolment_id users.authentication_user_id enrolment_list courselist categorylist cartypelist categorytypelist %}</span>
+																</p>
+																
+																{% for st in sales_transaction_list %}
+																	{% if st.user_id == users.authentication_user_id %}												
+																		
+																		{% ifequal st.for_payment_term|stringformat:"s" "1" %}
+																			{% ifequal st.status|stringformat:"s" "1" %}
+																				
+																				<span class = "badge badge-success"><i class = "fa fa-check"></i> Partial Payment (50%) </span> 
+																				
+																			{% else %}
+																			
+																				<span class = "badge badge-warning"><i class = "fa fa-exclamation"></i> Partial Payment (50%) </span> 
+																				
+																			
+																			{% endifequal %}
+																		{% endifequal %}
+																		
+																		{% ifequal st.for_payment_term|stringformat:"s" "2" %}
+																			{% ifequal st.status|stringformat:"s" "1" %}
+																				
+																				<span class = "badge badge-success text-uppercase"><i class = "fa fa-check"></i> Full Payment (100%) </span>  
+																				
+																			{% else %}
+																			
+																				<span class = "badge badge-warning text-uppercas"><i class = "fa fa-exclamation"></i>  Full Payment (100%) 	 </span>								
+																			
+																			{% endifequal %}
+																		{% endifequal %}
+																		
+																	{% else %}														
+																		
+																	{% endif %}
+																{% endfor %}	
+																		
+															</h5>
+															
+														</div>
+														<div class = "modal-body">						
+																													
+																<h6> {%  hide_if_no_sales_transaction_user 'No Sales Transaction Found' users.authentication_user_id sales_transaction_list  %} </h6>					
+																<div id="content" class = "{% hide_if_no_sales_transaction_user 'd-none' users.authentication_user_id sales_transaction_list %}">
+																	<ul class="timeline">																	
+																		
+																		
+																		{% for st in sales_transaction_list %}
+																			{% if st.user_id == users.authentication_user_id %}
+																			
+																				
+																				{% ifequal st.status|stringformat:"s" "0" %}
+																					
+																					<li class="event" data-date="{{ st.datetime_paid }}">
+																							
+																						<h6>
+																							<small>
+																								<span class = "font-weight-bold">{% get_payment_term_status2 st.for_payment_term|stringformat:"s" %}</span>
+																								Sent Thru <span class = "font-weight-bold">{% get_payment_method_by_id st.payment_method|stringformat:"s" paymentmethod_list %}</span> 
+																							</small>
+																						</h6>	
+																					
+																						<h6><span class = "font-weight-bold ">Reference Number</span></h6>
+																						<p>{{ st.payment_reference_no }}</p>
+																					
+																					</li>	
+																					
+																				{% endifequal %}
+																				
+																				{% ifequal st.status|stringformat:"s" "1" %}																								
+																																										
+																						<li class="event" data-date="{{ st.datetime_paid }}">
+																							
+																							<h6>
+																								<small>
+																								
+																									<span class = "font-weight-bold">{% get_payment_term_status2 st.for_payment_term|stringformat:"s" %}</span>
+																									<p>Sent Thru <span class = "font-weight-bold">{% get_payment_method_by_id st.payment_method paymentmethod_list %}</span> </p>
+																								</small>
+																							</h6>	
+																							
+																							<small>
+																								<h6><small class = "font-weight-bold">Reference Number</small></h6>
+																								<p>{{ st.payment_reference_no }}</p>
+																							</small>
+																							
+																							<small>
+																								<h6><small class = "font-weight-bold">Amount Paid</small></h6>
+																								<p>PHP {{ st.amount_paid | floatformat:2 | intcomma }}</p>
+																							</small>
+																							
+																							<small>
+																								<h6><small class = "font-weight-bold">Balance</small></h6>
+																								<p>PHP {{ st.amount_balance | floatformat:2 | intcomma }}</p>
+																							</small>
+																							
+																						</li>
+																						
+																				{% endifequal %}
+																				
+																				{% if st.status != 1 and st.for_payment_term != 2 %}
+																					<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-declare-payment-{{users.id}}"> Declare Payment </button>
+																				{% endif %}		
+
+																				{% if st.status != 1 and st.for_payment_term != 1 %}
+																					<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-declare-payment-full-{{users.id}}"> Declare Payment </button>
+																				{% endif %}	
+																				
+																			{% endif %}
+																		{% endfor %}
+																													
+																		
+																	</ul>
+																</div>	
+																
+														</div> <!-- modal-body -->
+													</div> <!-- modal-content -->
+												</div> <!-- modal-dialog -->
+											</div> <!-- modal fade in modal payment status of applicant -->
+										
+                                            <td>
+											
+																									
+												<button type = "button" class = "btn btn-sm btn-success m-1 {% show_enroll sales_transaction_list users.authentication_user_id %}" data-toggle = "modal" data-target = "#modal-enroll-{{ users.id }}"><i class = "fa fa-plus"></i> Enroll</button>
+																														
+												<button type = "button" class = "btn btn-sm btn-danger m-1 {% has_enrolment_record users.authentication_user_id enrolment_list %}" data-toggle = "modal" data-target = "#modal-decline-{{ users.id }}"><i class = "fa fa-sign-in"></i> Decline</button>
+												
+												<div class = "modal fade in" id = "modal-declare-payment-cash-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold text-gray-900"> CASH PAYMENT of<br/>{{ users.lastname }}, {{ users.firstname }} {{ users.middlename }} {{ users.name_extension }} </h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action  = "declare_payment">
+																	{% csrf_token %}
+																								
+																		
+																	<div class = "form-group">
+																		<label for = "label">Payment Term</label>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																						
+																				<input type = "hidden" name = "enrolment_id" value = "{{ transac.id }}">		
+																				<input type = "hidden" name = "applicant_user_id" value = "{{ users.authentication_user_id}}">		
+																				<input type = "hidden" name = "payment_method" value = "{{ transac.payment_method }}">																
+																				
+																						
+																				
+																				<select name = "for_payment_term" rel = "{{ transac.id }}" class = "form-control payment_term_declared {% invisible_if_partially_paid_cash 'd-none' '' users.authentication_user_id sales_transaction_list %}">
+																				
+																					<option value = ""> -- Select Payment Term -- </option>																
+														
+																					<option value = "1">Partial Payment (50%)</option>
+																					<option value = "2">Full Payment (100%)</option>																																					
+																					
+																				</select>
+																				
+																				<input type = "hidden" name = "cash_reference_number" value = "{% reference_number "CASH" 10 sales_transaction_list transac.id users.authentication_user_id %}"/>
+																				
+																				<input type = "hidden" name = "for_payment_term" value = "2" {% invisible_if_partially_paid_cash '' 'disabled' users.authentication_user_id sales_transaction_list %}/>
+																				<h5 class = "font-weight-bold {% invisible_if_partially_paid_cash '' 'd-none' users.authentication_user_id sales_transaction_list %}">Payment for Balance (Fully Paid)</h5>
+																				
+																			{% endif %}
+																		{% endfor %}	
+																
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label for = "label">Course Tuition Fee</label>
+																		<h5>
+																			
+																			{% for transac in enrolment_list %}
+																				{% if transac.user_id == users.authentication_user_id %}
+																					PHP {{ transac.amount | floatformat:2 }}<br/>
+																					<small class = "{% invisible_if_partially_paid_cash '' 'd-none' users.authentication_user_id sales_transaction_list %}">Balance PHP {% get_balance users.authentication_user_id sales_transaction_list %}</small>
+																					<button type = "button" declare-payment-amount-id = "dpaid-{{ users.authentication_user_id }}" class = "btn btn-sm btn-outline-success declare-amount {% invisible_if_partially_paid_cash '' 'd-none' users.authentication_user_id sales_transaction_list %}" rel = "{% get_balance users.authentication_user_id sales_transaction_list %}">Declare This Amount</button>
+																				{% endif %}
+																			{% endfor %}												
+												
+																		</h5>
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label for = "label">Amount Paid</label>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																				<input type = "number" min = "1" id = "amount_paid_declared_{{ transac.id }}" a_paid = "{{ transac.amount }}" class = "form-control dpaid-{{ users.authentication_user_id }}" placeholder = "Amount Paid" name = "amount_paid"/>
+																			{% endif %}
+																		{% endfor %}	
+																			
+																		
+																	</div>
+																	<div class = "form-group">
+																		<label id = "middlename">Course</label>
+																		<h5>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																				
+																				{% get_course_name_by_id transac.enrolled_course courselist %}
+																				({% get_category_name_by_course_id transac.enrolled_course categorylist courselist %})
+																				
+																			{% endif %}										
+																		{% endfor %}	
+												
+																		</h5>
+																	</div>
+																	
+																	<div class = "form-group">																		
+																		<button class = "btn btn-success" type = "submit" role = "button">Submit</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div> <!-- modal for declare payment cash -->
+
+															
+												<div class = "modal fade in" id = "modal-declare-payment-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold text-gray-900">
+																
+																	<small>									
+																		
+																	{% get_payment_method_by_a_user_id users.authentication_user_id sales_transaction_list paymentmethod_list %}
+																		
+																	Payment of
+																	</small><br/>
+																	{{ users.lastname }}, {{ users.firstname }} {{ users.middlename }} {{ users.name_extension }}
+																	
+																</h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action  = "declare_payment">
+																	{% csrf_token %}																	
+																	
+																	<input type = "hidden" name = "enrolment_id" value = "{{ transac.id }}">		
+																	<input type = "hidden" name = "applicant_user_id" value = "{{ users.authentication_user_id}}">		
+																	<input type = "hidden" name = "payment_method" value = "{{ transac.payment_method }}">		
+																		
+																	<div class = "form-group">
+																		<label for = "label">Reference Number</label>
+																		
+																		
+																		{% for st in sales_transaction_list %}
+																			{% if st.user_id == users.authentication_user_id %}		
+																			
+																				{% ifequal st.status|stringformat:"s" "0" %}
+																				
+																					<h5>{{ st.payment_reference_no }}</h5>											
+																					
+																				{% endifequal %}
+																				
+																			{% endif %}
+																		{% endfor %}
+												
+																		
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label for = "label">Payment Term</label>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																						
+																			<input type = "hidden" name = "enrolment_id" value = "{{ transac.id }}">		
+																			<input type = "hidden" name = "applicant_user_id" value = "{{ users.authentication_user_id}}">		
+																			<input type = "hidden" name = "payment_method" value = "{{ transac.payment_method }}">																
+																			
+																				
+																			<select name = "for_payment_term" rel = "{{ transac.id }}" class = "form-control payment_term_declared">
+																			
+																				<option value = ""> -- Select Payment Term -- </option>												
+																				
+																				<option value = "1" {% if transac.payment_term|stringformat:"s" == "1" %} selected = "selected" {% endif %}>Partial Payment</option>
+																				<option value = "2" {% if transac.payment_term|stringformat:"s" == "2" %} selected = "selected" {% endif %}>Full Payment</option>
+																																				
+																				
+																			</select>
+																			
+																			{% endif %}
+																		{% endfor %}	
+																
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label for = "label">Amount Paid</label>
+																		<input type = "number" id = "label" class = "form-control" placeholder = "Amount Paid" name = "amount_paid"/>
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label id = "middlename">Course</label>
+																		<h5>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																				
+																				{% get_course_name_by_id transac.enrolled_course courselist %}
+																				({% get_category_name_by_course_id transac.enrolled_course categorylist courselist %})
+																				
+																			{% endif %}										
+																		{% endfor %}	
+												
+																		</h5>
+																	</div>																	
+																	
+																	<div class = "form-group">
+																		<label for = "label">Course Tuition Fee</label>
+																		<h5>
+																			
+																			{% for transac in enrolment_list %}
+																				{% if transac.user_id == users.authentication_user_id %}
+																					PHP {{ transac.amount | floatformat:2 }}
+																				{% endif %}
+																			{% endfor %}	
+												
+																		</h5>
+																	</div>
+																	
+																
+																	<div class = "form-group">																		
+																		<button class = "btn btn-success" type = "submit" role = "button">Submit</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div> <!-- modal for declare payment non cash -->
+												
+												<div class = "modal fade in" id = "modal-declare-payment-full-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold text-gray-900">
+																
+																{% for st in sales_transaction_list %}
+																	{% if st.user_id == users.authentication_user_id %}																	
+																		{% ifequal st.status|stringformat:"s" "0" %}
+																			{% get_payment_method_by_id st.payment_method|stringformat:"s" paymentmethod_list %} 
+																		{% endifequal %}
+																	{% endif %}
+																{% endfor %}
+																
+																Payment of <br/>
+																{{ users.lastname }}, {{ users.firstname }} {{ users.middlename }} {{ users.name_extension }}
+																
+																</h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action  = "declare_payment">
+																	{% csrf_token %}																	
+																	
+																	<input type = "hidden" name = "enrolment_id" value = "{{ transac.id }}">		
+																	<input type = "hidden" name = "applicant_user_id" value = "{{ users.authentication_user_id}}">		
+																	<input type = "hidden" name = "payment_method" value = "{{ transac.payment_method }}">		
+																		
+																	<div class = "form-group">
+																		<label for = "label"><span class = "font-weight-bold text-gray-700">Reference Number</span></label>
+																		
+																		
+																		{% for st in sales_transaction_list %}
+																			{% if st.user_id == users.authentication_user_id %}		
+																			
+																				{% ifequal st.status|stringformat:"s" "0" %}
+																					<h5 class = "mb-4">{{ st.payment_reference_no }}</h5>
+																					<h5 class = "font-weight-bold text-gray-700">Balance</h5> PHP {% get_balance_online_payment users.authentication_user_id sales_transaction_list %}</h5>
+																				{% endifequal %}
+																				
+																			{% endif %}
+																		{% endfor %}
+												
+																		
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label for = "label">Payment Term</label>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																						
+																			<input type = "hidden" name = "enrolment_id" value = "{{ transac.id }}">		
+																			<input type = "hidden" name = "applicant_user_id" value = "{{ users.authentication_user_id}}">		
+																			<input type = "hidden" name = "payment_method" value = "{{ transac.payment_method }}">																
+																			<input type = "hidden" name = "for_payment_term" value = "2">																
+																			
+																			<h5>
+																				FULL PAYMENT
+																			</h5>	
+																			
+																			{% endif %}
+																		{% endfor %}	
+																
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label for = "label">Amount Paid</label>
+																		<input type = "number" id = "label" class = "form-control" placeholder = "Amount Paid" name = "amount_paid"/>
+																	</div>
+																	
+																	<div class = "form-group">
+																		<label id = "middlename">Course</label>
+																		<h5>
+																		
+																		{% for transac in enrolment_list %}
+																			{% if transac.user_id == users.authentication_user_id %}
+																				
+																				{% get_course_name_by_id transac.enrolled_course courselist %}
+																				({% get_category_name_by_course_id transac.enrolled_course categorylist courselist %})
+																				
+																			{% endif %}										
+																		{% endfor %}	
+												
+																		</h5>
+																	</div>																	
+																	
+																	<div class = "form-group">
+																		<label for = "label">Course Tuition Fee</label>
+																		<h5>
+																			
+																			{% for transac in enrolment_list %}
+																				{% if transac.user_id == users.authentication_user_id %}
+																					PHP {{ transac.amount | floatformat:2 }}
+																				{% endif %}
+																			{% endfor %}	
+												
+																		</h5>
+																	</div>
+																	
+																
+																	<div class = "form-group">																		
+																		<button class = "btn btn-success" type = "submit" role = "button">Submit</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div> <!-- modal for declare payment non cash FULL -->
+												
+												<div class = "modal fade in" id = "modal-image-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h4>Applicant Information</h4>
+																<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>																
+															</div>
+															<div class = "modal-body text-center">
+																
+																	<img src = "{% static 'student_page/img/account_image/1.jpg' %}" height = "150px" class = "img img-responsive rounded-circle m-1 my-4"/>
+																	<h4 class = "text-uppercase font-weight-bold text-gray-900"> {{ users.fullname }} </h4>																  
+																    <h6><small>  Username {% get_username users.authentication_user_id User_list %}<br/>Date/Time Registered: {{ users.datetime_registered }} </small></h6>
+																	
+																	<h6>
+																		Birthdate: {% convert_readable_date users.birthdate %} | Age: {{ users.get_age }}
+																	</h6>
+																	
+																	<a href="#" class="btn btn-success btn-icon-split my-3">
+																		<span class="icon text-white-50">
+																		 <small> @</small>
+																		</span>
+																		<span class="text"><small>{{ users.email_address }}</small></span>
+																	</a>
+																	
+																	<a href="#" class="btn btn-danger btn-icon-split">
+																		<span class="icon text-white-50">
+																		 <small><i class = "fa fa-mobile"></i></small>
+																		</span>
+																		<span class="text"><small>{{ users.contact_number }}</small></span>
+																	</a>															
+																	
+																	
+																	<div class = "card shadow">
+																		<div class = "card-header">
+																			<h6 class = "card-title font-weight-bold text-gray-800">Complete Address</h6>
+																		</div>
+																		<div class = "card-body">
+																			{{ users.complete_address }}
+																		</div>
+																	</div>
+																
+															</div>
+														
+														</div>
+													</div>
+												</div> <!-- modal image (user information) -->
+												
+												<div class = "modal fade in" id = "modal-enroll-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h4 class = "modal-title text-gray-900 font-weight-bold">
+																	Enroll {{ users.fullname}}<br/>
+																	<small>
+																		{% get_course_name_by_a_user_id users.authentication_user_id enrolment_list courselist %}
+																		({% get_category_name_by_a_user_id users.authentication_user_id enrolment_list courselist categorylist %})
+																	</small>						
+																		
+																
+																</h4>
+																<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>
+															</div>
+																																													
+															<div class = "modal-body">
+																<h5>
+																
+																	{% for st in sales_transaction_list %}
+																		{% if st.user_id == users.authentication_user_id %}												
+																			
+																			{% ifequal st.for_payment_term|stringformat:"s" "1" %}
+																				{% ifequal st.status|stringformat:"s" "1" %}
+																					
+																					<span class = "badge badge-success"><i class = "fa fa-check"></i> Partial Payment (50%) </span> 
+																					
+																				{% else %}
+																				
+																					<span class = "badge badge-warning"><i class = "fa fa-exclamation"></i> Partial Payment (50%) </span> 
+																					
+																				
+																				{% endifequal %}
+																			{% endifequal %}
+																			
+																			{% ifequal st.for_payment_term|stringformat:"s" "2" %}
+																				{% ifequal st.status|stringformat:"s" "1" %}
+																					
+																					<span class = "badge badge-success text-uppercase"><i class = "fa fa-check"></i> Full Payment (100%) </span>  
+																					
+																				{% else %}
+																				
+																					<span class = "badge badge-warning text-uppercas"><i class = "fa fa-exclamation"></i>  Full Payment (100%) 	 </span>								
+																				
+																				{% endifequal %}
+																			{% endifequal %}
+																			
+																		{% else %}														
+																			
+																		{% endif %}
+																	{% endfor %}	
+																		
+																</h5>
+																
+																<h6>
+																	
+																	<div class = "table-responsive">
+																		<table class = "table table-bordered">
+																		
+																			<thead>
+																				<tr>
+																					<th>#</th>
+																					<th>Appointment ID</th>
+																					<th>Batch Name</th>
+																					<th>Instructor</th>
+																					<th>Schedule</th>
+																					<th>Hours Duration Per Day</th>
+																					<th>Days Duration</th>
+																					<th>No. of Enrolled</th>																					
+																					<th>Options</th>
+																				</tr>
+																			</thead>                                  
+																			
+																			<tbody>
+																				{% for apt in appointment_list %}
+																					<tr>
+																						<td>{{ forloop.counter }}</td>
+																						<td>{{ apt.id }}</td>
+																						<td>{{ apt.batch_appointment_name }}</td>
+																						<td>{% get_instructor_by_time_schedule_appointment_id apt.id timescheduleappointment instructor_list %}</td>
+																						<td>{% get_schedule_type apt.schedule_type schedule_type_list %} </td>
+																						<td>{% get_hours_per_day_schedule apt.schedule_type schedule_type_list %} hour(s) </td>																						
+																						<td> 																							
+																							{% get_days_duration_from_a_user_id users.authentication_user_id enrolment_list courselist apt.schedule_type schedule_type_list %}
+																						</td>																						
+																						<td>{% number_of_enrolled apt.id enrolment_list appointment_list attendance_list %}</td>
+																						<td>
+																						
+																							<form method = "POST" action = "enroll_student">
+																							{% csrf_token %}
+																								<input type = "hidden" name = "admin_id" value = "{{ user_id }}"/>
+																								<input type = "hidden" name = "time_schedule_appointment_id" value = "{% get_time_schedule_appointment_id apt.id timescheduleappointment %}"/>
+																								<input type = "hidden" name = "appointment_id" value = "{{ apt.id }}"/>
+																								<input type = "hidden" name = "authentication_user_id" value = "{{ users.authentication_user_id }}"/>
+																								<input type = "hidden" name = "enrolment_id" value = "{% get_current_enrolment_id_from_user users.authentication_user_id enrolment_list %}"/>
+																								<input type = "hidden" name = "course_hours" value = "{% get_hours_from_a_user_id users.authentication_user_id enrolment_list courselist %}"/>
+																								<input type = "hidden" name = "schedule" value = "{% get_schedule_type apt.schedule_type schedule_type_list %}"/>
+																								<input type = "hidden" name = "appointment_hours_per_day" value = "{% get_hours_per_day_schedule apt.schedule_type schedule_type_list %}"/>
+																								<button type  = "submit" class = "btn btn-success">Enroll Here</button>
+																							</form>
+																							
+																						</td>
+																					</tr>
+																				{% endfor %}
+																			</tbody>                                     
+							
+																														
+																		</table>
+																	</div>
+																	
+																</h6>																	
+															</div>
+															<div class = "modal-footer">
+															
+																<button type = "button" class = "btn btn-danger" data-dismiss = "modal"><i class = "fa fa-close"></i> Close</button>								
+																
+															</div> <!-- modal-footer -->
+														</div> <!-- modal-content -->
+													</div> <!-- modal-dialog  -->
+												</div> <!-- modal fade in ID = modal-enroll-{{ users.id }} -->		
+
+												<div class = "modal fade in" id = "modal-decline-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h5 class = "modal-title">Decline Application</h5>
+																<button class = "close" aria-label = "close" data-dismiss = "modal"> <span aria-hidden = "true">&times;</span> </button>
+															</div>
+															<div class = "modal-body text-center">
+																<h2>
+																	<small>Are you sure you want to decline application for</small><br/>
+																	<strong>{{ users.lastname }}, {{ users.firstname }} {{ users.middlename }} {{ users.name_extension }}</strong>?
+																</h2>																	
+															</div>
+															<div class = "modal-footer">
+																<button type = "button" class = "btn btn-danger" data-dismiss = "modal">Close</button>
+																
+																<form method = "POST">
+																	<button type = "submit" class = "btn btn-success">Confirm Decline</button>
+																</form>
+																
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												
+											</td>
+                                        </tr>
+										
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+		
+																							
+
+            {% endblock %}

@@ -1,0 +1,605 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">
+					
+						Courses							
+					</h1>
+					
+					<div class = "modal fade in" id = "modal-add-course">
+						<div class = "modal-dialog">
+							<div class = "modal-content">
+								<div class = "modal-header">
+									<h2 class = "text-uppercase font-weight-bold"> Add New Course </h2>
+								</div>
+								<div class = "modal-body">
+									<form method = "POST" action  = "add_course">
+										{% csrf_token %}
+										
+										
+										<div class = "form-group">
+											<label for = "course_code">Course Code</label>
+											<input type = "text" id = "course_code" class = "form-control" placeholder = "Course Code" name = "course_code"/>
+										</div>
+										<div class = "form-group">
+											<label for = "course_name">Course Name</label>
+											<input type = "text" id = "course_name" class = "form-control" placeholder = "Course Name" name = "course_name"/>
+										</div>
+										<div class = "form-group">
+											<label for = "course_desc">Course Description</label>
+											<input type = "text" id = "course_desc" class = "form-control" placeholder = "Course Description" name = "course_description"/>
+										</div>									
+										<div class = "form-group">
+											<label for = "hours_duration">Hours Duration</label>
+											<input type = "number" min = "1" id = "hours_duration" class = "form-control" placeholder = "Hours Duration" name = "hours_duration"/>
+										</div>
+										<div class = "form-group">
+											<label for = "category">Category</label>
+											<select name = "category_id" id = "category" class = "form-control">
+												<option value = ""> -- Select Category -- </option>
+												{% for cat_list in categorylist %}
+													<option value = "{{ cat_list.id }}">{{ cat_list.category_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class = "form-group">
+											<label for = "car_type">For Car Type</label>
+											<select name = "car_type_id" id = "car_type" class = "form-control">
+												<option value = ""> -- Select Car Type -- </option>
+												{% for ctl in cartypelist %}
+													<option value = "{{ ctl.id }}">{{ ctl.car_type_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class = "form-group">
+											<label for = "tuition_fee">Tuition Fee</label>
+											<input type = "number" id = "tuition_fee" class = "form-control" placeholder = "Tuition Fee" name = "tuition_fee"/>
+										</div>
+										
+										<input type = "hidden" name = "added_by" value = "PADMIN1"/>
+										<input type = "hidden" name = "datetime_added" value = "{{ datetime_now }}"/>
+										
+										<div class = "form-group">																		
+											<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+					<div class = "modal fade in" id = "modal-add-category-type">
+						<div class = "modal-dialog">
+							<div class = "modal-content">
+								<div class = "modal-header">
+									<h2 class = "text-uppercase font-weight-bold"> Add New Category Type </h2>
+								</div>
+								<div class = "modal-body">
+									<form method = "POST" action  = "add_category_type">
+										{% csrf_token %}
+										
+										
+										<div class = "form-group">
+											<label for = "category_name">Category Type Name</label>
+											<input type = "text" id = "category_type_name" class = "form-control" placeholder = "Category Type Name" name = "category_type_name"/>
+										</div>										
+										
+										<div class = "form-group">																		
+											<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+											
+											
+					<div class = "modal fade in" id = "modal-add-car-type">
+						<div class = "modal-dialog">
+							<div class = "modal-content">
+								<div class = "modal-header">
+									<h2 class = "text-uppercase font-weight-bold"> Add New Car Type </h2>
+								</div>
+								<div class = "modal-body">
+									<form method = "POST" action  = "add_car_type">
+										{% csrf_token %}
+										
+										
+										<div class = "form-group">
+											<label for = "category_name">Car Type</label>
+											<input type = "text" id = "car_type_name" class = "form-control" placeholder = "Car Type Name" name = "car_type_name"/>
+										</div>										
+										
+										<div class = "form-group">																		
+											<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+											
+											
+											
+					<div class = "modal fade in" id = "modal-add-category">
+						<div class = "modal-dialog">
+							<div class = "modal-content">
+								<div class = "modal-header">
+									<h2 class = "text-uppercase font-weight-bold"> Add New Category </h2>
+								</div>
+								<div class = "modal-body">
+									<form method = "POST" action  = "add_category">
+										{% csrf_token %}
+										
+										
+										<div class = "form-group">
+											<label for = "category_name">Category Name</label>
+											<input type = "text" id = "category_name" class = "form-control" placeholder = "Category Name" name = "category_name"/>
+										</div>		
+
+										<div class = "form-group">
+											<label for = "category_type">Category Type</label>
+											<select name = "category_type_id" class = "form-control">
+												{%  for cat_type in categorytypelist %}
+													<option value = "{{ cat_type.id }}"> {{ cat_type.category_type_name }} </option>
+												{%  endfor %}
+											</select>
+										</div>	
+										
+										<div class = "form-group">																		
+											<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+											
+				
+                    <p class="mb-4">
+						List of All Courses and Details
+					</p>
+					
+					{% for msg in messages %}
+						<h3 class = "alert alert-{{ msg.tags }} alert-dismissible " role = "alert">
+							{{ msg }}
+							<button type = "button" class = "btn btn-inverse" data-dismiss = "alert" aria-label = "close"><span aria-hidden = "true">&times;</span></button>
+						</h3>
+					{% endfor %}
+
+
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+				
+					<li class="nav-item" role="presentation">
+						<a class="nav-link active" id="ongoing-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses" aria-selected="true">Courses</a>
+					</li>
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" id="categorytype-tab" class = "text-gray-900" data-toggle="tab" href="#categorytype" role="tab" aria-controls="categorytype" aria-selected="false">Category Type</a>
+					</li>		
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" id="cat-tab" class = "text-gray-900" data-toggle="tab" href="#category-tab" role="tab" aria-controls="category-tab" aria-selected="false">Category</a>
+					</li>
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" id="cartype-tab" class = "text-gray-900" data-toggle="tab" href="#cartype" role="tab" aria-controls="cartype" aria-selected="false">Car Type</a>
+					</li>	
+						
+				</ul>
+				
+							
+					  
+					  
+				<div class="tab-content" id="myTabContent">
+				
+					
+					  <div class="tab-pane fade show active" id="courses" role="tabpanel" aria-labelledby="courses">
+					  
+									<!-- DataTales Example -->
+									<div class="card shadow mb-4">
+										<div class="card-header py-3">
+											Courses
+											
+											<a href="#" class="d-none d-sm-inline-block btn btn-lg btn-danger float-right shadow-sm" data-toggle = "modal" data-target = "#modal-add-course">
+												<i class="fas fa-plus fa-sm text-white-50"></i> Add Course
+											</a>
+										</div>
+										<div class="card-body">
+											<div class="table-responsive">
+												<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+													<thead>
+														<tr>
+															<th>#</th>                                           
+															<th>Course Code</th>                                            
+															<th>Course Name</th>                                            
+															<th>Description</th>                                            
+															<th>Category</th>
+															<th>Car Type</th>
+															<th>Tuition Fee</th>											                                            
+															<th>Duration(Hours)</th>
+															<th>Added By</th>
+															<th>Options</th>
+														</tr>
+													</thead>                                  
+													
+													<tbody>                                     
+														
+														{% for course_detail in courselist %}
+														
+														 <tr>
+															<td> {{ forloop.counter }} </td>
+														  
+															<td>
+																{{ course_detail.course_code }}
+															</td>     
+															
+															<td>
+																{{ course_detail.course_name }}
+															</td>
+															
+															<td>
+																{{ course_detail.course_description }}
+															</td>  											
+															
+															<td>								
+																{% get_category_name_by_id course_detail.category_id categorylist %}												
+															</td>
+															
+															<td>												
+																{% get_car_type course_detail.car_type_id cartypelist %}
+															</td>
+															
+															<td>{{ course_detail.tuition_fee | floatformat:2 }}</td>                                                                          
+															<td>{{ course_detail.hours_duration }} Hour(s)</td>
+															<td>											
+														
+															{% get_username course_detail.added_by auth_userlist %}
+															
+															</td>                                           
+														  
+															<td>
+															
+																<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-course-{{ course_detail.id }}">Edit</button>
+																
+																<div class = "modal fade in" id = "modal-edit-course-{{ course_detail.id }}">
+																	<div class = "modal-dialog">
+																		<div class = "modal-content">
+																			<div class = "modal-header">
+																				<h2 class = "text-uppercase font-weight-bold"> <small>Course Name</small><br/>{{ course_detail.course_name }} <h3><small> Update Detail </small> </h3></h2>
+																			</div>
+																			<div class = "modal-body">
+																				<form method = "POST" action  = "course_details">
+																					{% csrf_token %}
+																					
+																					<input type = "hidden" name = "operation" value = "edit"/>
+																					<input type = "hidden" name = "course_id" value = "{{ course_detail.id }}"/>
+																					
+																					<div class = "form-group">
+																						<label for = "course_code">Course Code</label>
+																						<input type = "text" id = "course_code" value = "{{ course_detail.course_code }}" class = "form-control" placeholder = "Course Code" name = "course_code_edit"/>
+																					</div>
+																					
+																					<div class = "form-group">
+																						<label for = "course_name">Course Name</label>
+																						<input type = "text" id = "course_name" value = "{{ course_detail.course_name }}" class = "form-control" placeholder = "Course Name" name = "course_name_edit"/>
+																					</div>
+																					<div class = "form-group">
+																						<label for = "course_desc">Course Description</label>
+																						<input type = "text" id = "course_desc" value = "{{ course_detail.course_description }}" class = "form-control" placeholder = "Course Description" name = "course_description_edit"/>
+																					</div>
+																					<div class = "form-group">
+																						<label for = "hours_duration">Hours Duration</label>
+																						<input type = "text" id = "hours_duration" value = "{{ course_detail.hours_duration }}" class = "form-control" placeholder = "Hours Duration" name = "hours_duration_edit"/>
+																					</div>
+																					<div class = "form-group">
+																						<label for = "tuition_fee">Tuition Fee</label>
+																						<input type = "number" id = "tuition_fee" value = "{{ course_detail.tuition_fee }}" class = "form-control" placeholder = "Tuition Fee" name = "tuition_fee_edit"/>
+																					</div>
+																					
+																					<div class = "form-group">
+																						<label for = "category">Category</label>
+																						<select name = "category_id_edit" id = "category" class = "form-control">
+																							<option value = ""> -- Category Name -- </option>
+																							{% for cat_list in categorylist %}
+																								<option value = "{{ cat_list.id }}" {% if cat_list.id == course_detail.category_id %} selected = "selected" {% endif %} >{{ cat_list.category_name }} ({% get_category_type_name categorytypelist cat_list.category_type_id %})</option>
+																							{% endfor %}
+																						</select>
+																					</div>
+																					
+																					<div class = "form-group">
+																						<label for = "car_type">Car Type</label>
+																						<select name = "car_type_id_edit" id = "car_type" class = "form-control">
+																							<option value = ""> -- Car Type -- </option>
+																							{% for cartl in cartypelist %}
+																								<option value = "{{ cartl.id }}" {% if cartl.id == course_detail.car_type_id %} selected = "selected" {% endif %} >{{ cartl.car_type_name }}</option>
+																							{% endfor %}
+																						</select>
+																					</div>
+																					
+																					<div class = "form-group">																		
+																						<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																					</div>
+																				</form>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																
+															
+															</td>
+														</tr>
+														
+														{% endfor %}
+														
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div> <!-- card-shadow -->						
+									
+									
+					  </div> <!-- courses tab -->				  
+					 
+					  <div class="tab-pane fade" id="categorytype" role="tabpanel" aria-labelledby="categorytype">				  
+					  
+							<div class="card shadow mb-4">
+									<div class="card-header py-3">
+										Category Type
+										
+										<a href="#" class="d-none d-sm-inline-block btn btn-lg btn-danger float-right shadow-sm" data-toggle = "modal" data-target = "#modal-add-category-type">
+											<i class="fas fa-plus fa-sm text-white-50"></i> Add Category Type
+										</a>
+										
+									</div>
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>                                           
+														<th>Category Type Name</th>                                         
+														<th>Options</th>
+													</tr>
+												</thead>                                  
+												
+												<tbody>                                     
+													
+													{% for category_type_detail in categorytypelist %}
+													
+													 <tr>
+														<td> {{ forloop.counter }} </td>
+													  
+														<td>
+															{{ category_type_detail.category_type_name }}
+														</td>                                                                           
+													  
+														<td>
+														
+															<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-category-type-{{ category_type_detail.id }}">Edit</button>
+															
+															<div class = "modal fade in" id = "modal-edit-category-type-{{ category_type_detail.id }}">
+																<div class = "modal-dialog">
+																	<div class = "modal-content">
+																		<div class = "modal-header">																
+																			<h2 class = "text-uppercase font-weight-bold"> <small>Category Type Name</small><br/>{{ category_type_detail.category_type_name }} <h3><small> Update Detail </small> </h3></h2>
+																		</div>
+																		<div class = "modal-body">
+																			<form method = "POST" action  = "category_type_details_edit">
+																				{% csrf_token %}
+																				
+																				<input type = "hidden" name = "id" value = "{{ category_type_detail.id }}"/>
+																				
+																				<div class = "form-group">
+																					<label for = "category_type_name">Category Type Name</label>
+																					<input type = "text" id = "category_type_name" value = "{{ category_type_detail.category_type_name }}" class = "form-control" placeholder = "Category Type Name" name = "category_type_name_edit"/>
+																				</div>																	
+																				<div class = "form-group">																		
+																					<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																				</div>
+																			</form>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															
+														
+														</td>
+													</tr>
+													
+													{% endfor %}
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div> <!-- card-shadow -->     
+										
+
+					  </div> <!-- categorytype tab -->					
+					  
+					  <div class="tab-pane fade" id="cartype" role="tabpanel" aria-labelledby="cartype">			  
+					  							
+					
+							<div class="card shadow mb-4">
+									<div class="card-header py-3">
+										Car Type
+										
+										<a href="#" class="d-none d-sm-inline-block btn btn-lg btn-danger float-right shadow-sm" data-toggle = "modal" data-target = "#modal-add-car-type">
+											<i class="fas fa-plus fa-sm text-white-50"></i> Add Car Type
+										</a>
+										
+									</div>
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>                                           
+														<th>Car Type</th>                                         
+														<th>Options</th>
+													</tr>
+												</thead>                                  
+												
+												<tbody>                                     
+													
+													{% for car in cartypelist %}
+													
+													 <tr>
+														<td> {{ forloop.counter }} </td>
+													  
+														<td>
+															{{ car.car_type_name }}
+														</td>                                                                           
+													  
+														<td>
+														
+															<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-cartype-{{ car.id }}">Edit</button>
+															
+															<div class = "modal fade in" id = "modal-edit-cartype-{{ car.id }}">
+																<div class = "modal-dialog">
+																	<div class = "modal-content">
+																		<div class = "modal-header">																
+																			<h2 class = "text-uppercase font-weight-bold"> <small>Car Type Name</small><br/>{{ car.car_type_name }} <h3><small> Update Detail </small> </h3></h2>
+																		</div>
+																		<div class = "modal-body">
+																			<form method = "POST" action  = "car_type_edit">
+																				{% csrf_token %}
+																				
+																				<input type = "hidden" name = "id" value = "{{ car.id }}"/>
+																				
+																				<div class = "form-group">
+																					<label for = "category_name">Car Type</label>
+																					<input type = "text" id = "car_type_name" value = "{{ car.car_type_name }}" class = "form-control" placeholder = "Car Type Name" name = "car_type_name_edit"/>
+																				</div>																	
+																				<div class = "form-group">																		
+																					<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																				</div>
+																			</form>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															
+														
+														</td>
+													</tr>
+													
+													{% endfor %}
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div> <!-- card-shadow car-type -->   
+								
+					  </div> <!-- cartype tab -->					 
+					 
+				
+					   <div class="tab-pane fade" id="category-tab" role="tabpanel" aria-labelledby="category-tab">			  
+					  							
+					
+							<div class="card shadow mb-4">
+					  
+								<div class="card-header py-3">
+									Category
+									
+									<a href="#" class="d-none d-sm-inline-block btn btn-lg btn-danger float-right shadow-sm" data-toggle = "modal" data-target = "#modal-add-category">
+										<i class="fas fa-plus fa-sm text-white-50"></i> Add Category
+									</a>
+									
+								</div>
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+											<thead>
+												<tr>
+													<th>#</th>                                           
+													<th>Category Name</th>                                         
+													<th>Category Type</th>                                         
+													<th>Options</th>
+												</tr>
+											</thead>                                  
+											
+											<tbody>                                     
+												
+												{% for category_detail in categorylist %}
+												
+												 <tr>
+													<td> {{ forloop.counter }} </td>
+												  
+													<td>
+														{{ category_detail.category_name }}
+													</td>         
+
+													<td>											
+														{% get_category_type_name categorytypelist category_detail.category_type_id  %}
+													</td>											
+												  
+													<td>
+													
+														<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-category-{{ category_detail.id }}">Edit</button>
+														
+														<div class = "modal fade in" id = "modal-edit-category-{{ category_detail.id }}">
+															<div class = "modal-dialog">
+																<div class = "modal-content">
+																	<div class = "modal-header">																
+																		<h2 class = "text-uppercase font-weight-bold"> <small>Category Name</small><br/>{{ category_detail.category_name }} <h3><small> Update Detail </small> </h3></h2>
+																	</div>
+																	<div class = "modal-body">
+																		<form method = "POST" action  = "category_details_edit">
+																			{% csrf_token %}
+																			
+																			<input type = "hidden" name = "id" value = "{{ category_detail.id }}"/>
+																			
+																			<div class = "form-group">
+																				<label for = "category_name">Category Name</label>
+																				<input type = "text" id = "category_name" value = "{{ category_detail.category_name }}" class = "form-control" placeholder = "Category Name" name = "category_name_edit"/>
+																			</div>		
+																			<div class = "form-group">
+																				<label for = "category_type">Category Type</label>
+																				<select name = "category_type_id" class = "form-control">
+																					<option value = ""> --  -- </option>
+																					{% for ctl in categorytypelist %}
+																						<option value = "{{ ctl.id }}" {% if ctl.id == category_detail.category_type_id %} selected = "selected" {% endif %} > {{ ctl.category_type_name }} </option>
+																					{% endfor %}
+																				</select>
+																			</div>	
+																			<div class = "form-group">																		
+																				<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																			</div>
+																		</form>
+																	</div>
+																</div>
+															</div>
+														</div>
+														
+													
+													</td>
+												</tr>
+												
+												{% endfor %}
+												
+											</tbody>
+										</table>
+									</div> <!-- table-responsive -->
+								</div> <!-- card-body -->
+							</div> <!-- card-shadow -->
+								
+					  </div> <!-- cartype tab -->					 
+					  
+					</div> <!-- tab-content -->			
+					
+					
+							
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

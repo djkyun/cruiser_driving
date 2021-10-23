@@ -1,0 +1,73 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+						
+					
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">System Settings</h1>
+					
+                    <p class="mb-4">
+						Settings and Contact Details seen from the website
+					</p>
+								
+
+					<form method = "POST" action = "system_settings" style = "display:none;">			
+					
+						{% csrf_token %}	
+					
+						{{ system_settings_form }}
+					
+						<button type = "submit" class = "btn btn-success">Save</button>
+					
+					</form>
+				              
+					{% for sys_info in system_settings_list %}
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h5 class="m-0 font-weight-bold text-inverse text-gray-700">{{ sys_info.system_label }}
+																					
+									<!-- Default switch -->
+									<div class="custom-control custom-switch float-right">
+									  <input type="checkbox" class="custom-control-input" id="customSwitches" {% if sys_info.status == '1' %} checked {% endif %}>
+									  <label class="custom-control-label" for="customSwitches">Visible</label>
+									</div>
+								
+								</h5>
+							</div>
+							<div class="card-body">
+								
+								<div class = "form-group">
+									
+									
+									<form method = "POST" action = "system_settings_update">
+										{% csrf_token %}
+										<div class = "form-group">
+											<input type = "hidden" name = "system_settings_id" value = "{{ sys_info.id }}"/>												
+											<input type = "hidden" name = "system_label" value = "{{ sys_info.system_label }}"/>												
+											<input type = "hidden" name = "system_name" value = "{{ sys_info.system_name }}"/>												
+											<input type = "text" class = "form-control" name = "system_value" class = "form-control" placeholder = "{{ sys_info.system_label }}" value = "{{ sys_info.system_value }}">
+										</div>
+										<div class = "form-group">
+											<button type = "submit" class = "btn btn-success">Save</button>
+										</div>											
+										
+									</form>
+							
+															
+								</div>
+								
+							</div>
+						</div> <!-- end of system_settings values -->
+					{% endfor %}	
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

@@ -1,0 +1,237 @@
+
+{% extends 'website/base.html' %}
+{% block body %}
+{% load static %}
+
+<section class="single-page-header" style="background-image: url({% static 'website/images/slider/slider-bg-3.jpg' %});">
+		<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Register</h2>
+				<h5><small>Home / Register</small></h5>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+	<!--
+Start About Section
+==================================== -->
+<section class="about-2 section" id="about">
+	<div class="container">
+		<div class="row">
+
+			<!-- section title -->
+			<div class="col-12">
+				<div class="title text-center">
+					<h2>Registration Complete!</h2>
+					<p>Check your Email Address to confirm your account!</p>
+					<div class="border"></div>
+				</div>
+			</div>
+			<!-- /section title -->
+			
+		</div> <!-- End row -->
+		
+		<div class = "card shadow mb-3">
+			<div class = "card-header">
+				<h4 class = "mt-10">
+					Personal Information
+				</h4>
+			</div>
+			<div class = "card-body">			
+			
+				<div class = "container-fluid">
+					<div class = "row">
+					
+						
+								
+						<div class = "col-md-6">			
+						
+							<div class = "form-group">
+								<label for = "username">Username</label>
+								<h4>{{ username }}</h4>
+							</div>			
+							<div class = "form-group">
+								<label for = "label">Full Name</label>
+								<h4>{{ fullname }}</h4>
+							</div>		
+							<div class = "form-group">
+								<label for = "label">Complete Address</label>
+								<h4>{{ complete_address }}</h4>
+							</div>	
+							<div class = "form-group">
+								<label for = "label">Email Address</label>
+								<h4>{{ registered_email_address }}</h4>
+							</div>	
+							<div class = "form-group">
+								<label for = "label">Contact Number</label>
+								<h4>{{ registered_contact_number }}</h4>
+							</div>	
+							
+						</div>							
+					
+						
+						<div class = "col-md-6">							
+							
+							
+							<div class = "form-group">
+								<label for = "username">Username</label>
+								<h4>{{ username }}</h4>
+							</div>			
+							<div class = "form-group">
+								<label for = "label">Full Name</label>
+								<h4>{{ fullname }}</h4>
+							</div>		
+							<div class = "form-group">
+								<label for = "label">Complete Address</label>
+								<h4>{{ complete_address }}</h4>
+							</div>	
+							<div class = "form-group">
+								<label for = "label">Email Address</label>
+								<h4>{{ registered_email_address }}</h4>
+							</div>	
+							<div class = "form-group">
+								<label for = "label">Contact Number</label>
+								<h4>{{ registered_contact_number }}</h4>
+							</div>	
+							
+						</div>
+						
+					</div> <!-- row Account Information / Register -->
+				</div>
+			</div>
+		</div>	
+		
+			
+			
+			
+
+	</div> <!-- End container -->
+</section> <!-- End section -->
+
+
+
+	<!-- Start Pricing section
+		=========================================== -->
+		
+<section class="pricing-table " id="pricing">
+	<div class="container">
+		<div class="row">
+
+			<!-- section title -->
+			<div class="col-12">
+				<div class="title title-white text-center ">
+					<h2>Our Featured Courses</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium soluta deserunt eaque, est, quia hic
+						odit sed incidunt officiis quidem.</p>
+					<div class="border"></div>
+				</div>
+			</div>
+			<!-- /section title -->
+
+			<!-- single pricing table -->
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="pricing-item">
+
+					<!-- plan name & value -->
+					<div class="price-title">
+						<h3>Basic</h3>
+						<strong class="value">P15,000 </strong>
+						<p>Perfect for single freelancers who work by themselves</p>
+					</div>
+					<!-- /plan name & value -->
+
+					<!-- plan description -->
+					<ul>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Driving Routes</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to Drive as a Friend</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to negotiate with MMDA and LTFRB</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Road Signs</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Basic Drifting</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Basic Engine Assembly</li>
+					</ul>
+					<!-- /plan description -->
+
+					<!-- signup button -->
+					<a class="btn btn-main" href="#">Signup</a>
+					<!-- /signup button -->
+
+				</div>
+			</div>
+			<!-- end single pricing table -->
+
+			<!-- single pricing table -->
+			<div class="col-md-4 col-sm-6 col-xs-12  ">
+				<div class="pricing-item">
+
+					<!-- plan name & value -->
+					<div class="price-title">
+						<h3>Standard</h3>
+						<strong class="value">P25,000</strong>
+						<p>Suitable for small businesses with up to 5 employees</p>
+					</div>
+					<!-- /plan name & value -->
+
+					<!-- plan description -->
+					<ul>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Driving Principles</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Do's and Don'ts in Driving</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Manual and Automatic Engine</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Basic to Advanced Drifting</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to unlock clamps</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to make an emergency ride</li>
+					</ul>
+					<!-- /plan description -->
+
+					<!-- signup button -->
+					<a class="btn btn-main" href="#">Signup</a>
+					<!-- /signup button -->
+
+				</div>
+			</div>
+			<!-- end single pricing table -->
+
+			<!-- single pricing table -->
+			<div class="col-md-4 col-sm-6 col-xs-12 ">
+				<div class="pricing-item">
+
+					<!-- plan name & value -->
+					<div class="price-title">
+						<h3>Advanced</h3>
+						<strong class="value">P50,000</strong>
+						<p>Great for large businesses with more than 5 employees</p>
+					</div>
+					<!-- /plan name & value -->
+					
+				
+
+					<!-- plan description -->
+					<ul>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Advanced Drifting</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Upgrading your own Engine</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to convert your car from Manual to Automatic</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Spray Paint</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Self Driving</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Overhauling Engine</li>
+					</ul>
+					<!-- /plan description -->
+
+					<!-- signup button -->
+					<a class="btn btn-main" href="#">Signup</a>
+					<!-- /signup button -->
+
+				</div>
+			</div>
+			<!-- end single pricing table -->
+
+
+		</div> <!-- End row -->
+	</div> <!-- End container -->
+</section> <!-- End section -->
+
+	
+					
+{% endblock %}
+

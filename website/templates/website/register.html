@@ -1,0 +1,485 @@
+
+{% extends 'website/base.html' %}
+{% block body %}
+{% load static %}
+
+<section class="single-page-header" style="background-image: url({% static 'website/images/slider/slider-bg-3.jpg' %});">
+		<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Register</h2>
+				<h5><small>Home / Register</small></h5>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+	<!--
+Start About Section
+==================================== -->
+<section class="about-2 section" id="about">
+	<div class="container">
+		<div class="row">
+
+			<!-- section title -->
+			<div class="col-12">
+				<div class="title text-center">
+					<h2>Now is the sign to learn driving!</h2>
+					<p>Register Now and become part of our family!</p>
+					<div class="border"></div>
+				</div>
+			</div>
+			<!-- /section title -->
+			
+			{% for message in messages %}
+			
+				<h5 class = "alert alert-{{ message.tags }} alert-dismissible fade show" role = "alert">
+					<strong> {{ message }} </strong>
+					<button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+						<span aria-hidden = "true"> &times; </span>
+					</button>
+				</h5>
+				
+			{% endfor %}
+			
+		</div> <!-- End row -->
+		
+			<div class = "card shadow mb-3">
+				<div class = "card-header">
+					<h4 class = "mt-10">
+						Account Information
+					</h4>
+				</div>
+				<div class = "card-body">
+				
+					<form method = "POST" action = "register_process">
+							{% csrf_token %}		
+							
+					<div class = "container-fluid">
+						<div class = "row">
+						
+							
+									
+							<div class = "col-md-4">							
+								<div class = "form-group">
+									<label for = "username">Username</label>
+									<input type = "text" name = "username" class = "form-control" id = "username" placeholder = "Username"/>
+								</div>								
+							</div>	
+							
+							<div class = "col-md-4">
+								<div class = "form-group">
+									<label for = "desired_password">Desired Password</label>
+									<input type = "password" name = "desired_password" class = "form-control" id = "desired_password" placeholder = "Desired Password"/>
+								</div>
+							</div>	
+							
+							<div class = "col-md-4">							
+								<div class = "form-group">
+									<label for = "retry_password">Retry Password</label>
+									<input type = "password" name = "retry_password" class = "form-control" id = "retry_password" placeholder = "Retry Password"/>
+								</div>									
+							</div>
+							
+						</div> <!-- row Account Information / Register -->
+					</div>
+				</div>
+			</div>
+			
+			<div class = "card shadow mb-3">
+			
+				<div class = "card-header">
+					<h4 class = "mt-10">Personal Information</h4>
+				</div>
+				
+				<div class = "card-body">
+				
+					<div class = "container-fluid">
+				
+						<div class = "row">
+						
+							
+								<div class="col-md-6">
+																
+								
+									<div class = "form-group">
+										<label for = "firstname">First Name</label>
+										<input type = "text" name = "firstname" class = "form-control" id = "firstname" placeholder = "First Name"/>
+									</div>
+									<div class = "form-group">
+										<label for = "middlename">Middle Name</label>
+										<input type = "text" name = "middlename" class = "form-control"  id = "middlename" placeholder = "First Name"/>
+									</div>
+									<div class = "form-group">
+										<label for = "lastname">Last Name</label>
+										<input type = "text" name = "lastname" class = "form-control"  id = "lastname" placeholder = "First Name"/>
+									</div>
+									<div class = "form-group">
+										<label for = "name_extension">Name Extension</label>
+										<select name = "name_extension" id = "name_extension" class = "form-control" >
+											<option value = ""> -- Choose Name Extension -- </option>
+											<option value = "Jr"> Jr. </option>
+											<option value = "Sr"> Sr. </option>
+											<option value = "III"> III. </option>
+											<option value = "IV"> IV. </option>
+										</select>
+									</div>					
+									
+								</div>
+								
+								<div class="col-md-6">
+									
+									
+									<div class = "form-group">
+										<label for = "birthdate">Birthdate</label>
+										<input type = "date" name = "birthdate" class = "form-control"  id = "birthdate" placeholder = "Birth Date"/>
+									</div>
+									<div class = "form-group">
+										<label for = "gender">Gender</label>
+										<select name = "gender" id = "gender" class = "form-control" >
+											<option value = ""> -- Choose Gender -- </option>
+											<option value = "M"> Male </option>
+											<option value = "F"> Female </option>							
+										</select>
+									</div>
+									<div class = "form-group">
+										<label for = "civil_status">Civil Status</label>
+										<select name = "civil_status" id = "civil_status" class = "form-control">
+											<option value = ""> -- Choose Civil Status-- </option>
+											<option value = "1"> Single </option>
+											<option value = "2"> Married </option>							
+											<option value = "3"> Separated </option>							
+										</select>
+									</div>		
+									
+									
+									
+								</div>
+								
+							
+							
+						</div> <!-- row  -->
+						
+					</div> <!-- container-fluid -->
+				
+				</div> <!-- card-body -->
+			</div> <!-- Card Shadow -->
+			
+			<div class = "card shadow mb-5">
+				<div class = "card-header">
+					<h4 class = "mt-10">
+						Contact Information
+					</h4>
+				</div>
+				<div class = "card-body">
+					<div class = "container-fluid">
+						<div class = "row">
+						
+							<div class = "col-md-6">							
+								<div class = "form-group">
+									<label for = "contact_number">Mobile Number</label>
+									<input type = "text" name = "contact_number" class = "form-control" id = "contact_number" placeholder = "Contact Number"/>
+								</div>							
+							</div>									
+									
+							<div class = "col-md-6">
+								<div class = "form-group">
+									<label for = "email_address">Email Address</label>
+									<input type = "email" name = "email_address" class = "form-control"  id = "email_address" placeholder = "Email Address"/>
+								</div>
+							</div>	
+							
+							<div class = "col-md-12">							
+								<div class = "form-group">
+									<label for = "complete_address">Complete Address</label>								
+									<textarea name = "complete_address" class = "form-control" placeholder = "Lot No./Building/House/Block No., Road/Street, Purok, Barangay, City/Municipality"></textarea>
+								</div>							
+							</div>						
+							
+							
+							
+						</div> <!-- row Account Information / Register -->
+					</div> <!-- container-fluid -->
+				</div> <!-- card-body -->			
+			</div> <!-- card shadow -->
+			
+			<div class = "card shadow mb-5">
+				<div class = "card-header">
+					<h4 class = "mt-10">
+						Preferred Course <span class= "selected_category_content"></span> <span class= "preferred_course_content"></span>
+					</h4>
+				</div>
+				<div class = "card-body">
+					<div class = "container-fluid">
+						<div class = "row">
+						
+							<div class = "col-md-12">
+								<div class = "form-group">
+								
+									<label for = "preferred_course">Select Category Type</label>
+									
+									
+									<select id = "selected_category_type" name = "selected_category_type" class = "form-control selected-category-type">
+										<option value = ""> -- Choose Category Type -- </option>
+										{% for ctl in category_type_list %}
+											<option value = "{{ ctl.id }}">{{ ctl.category_type_name }} </option>
+										{% endfor %}											
+									</select>
+									
+								</div>
+							</div>	
+							
+							<div class = "col-md-12">
+								<div class = "form-group">
+								
+									<label for = "preferred_course">Select Category</label>
+									
+									
+									<select id = "selected_category" name = "selected_category" class = "form-control selected-category">
+										<option value = ""> -- Choose Category -- </option>
+										{% for course_cat in category_list %}
+											<option value = "{{ course_cat.id }}">{{ course_cat.category_name }} </option>
+										{% endfor %}											
+									</select>
+									
+								</div>
+							</div>	
+							
+							<div class = "col-md-12">
+								<div class = "form-group">
+								
+									<label for = "preferred_course">Select Car Type</label>
+									
+									
+									<select id = "selected_car_type" name = "selected_car_type" class = "form-control selected-car-type">
+										<option value = ""> -- Choose Car Type -- </option>
+										{% for cartl in car_type_list %}
+											<option value = "{{ cartl.id }}">{{ cartl.car_type_name }} </option>
+										{% endfor %}											
+									</select>
+									
+								</div>
+							</div>	
+							
+							<div class = "col-md-12">
+								<div class = "form-group">
+								
+									<label for = "preferred_course">Select Preferred Course</label>
+									
+									
+									<select id = "preferred_course" name = "preferred_course" class = "form-control preferred-course">
+										<div class = "course_options">
+											<option value = ""> -- Choose Course -- </option>
+											{% for cl in course_list %}
+												<option value = "{{ cl.id }}" rel = "{{ cl.tuition_fee }}">{{ cl.course_description }} P{{ cl.tuition_fee | floatformat:2 }} </option>
+											{% endfor %}
+										</div>
+									</select>
+									
+								</div>
+							</div>	
+							
+						
+							
+							<input type = "hidden" name = "tuition_fee" id = "tuition_fee"/>
+													
+									
+							
+						</div> <!-- row Account Information / Register -->
+					</div> <!-- container-fluid -->
+				</div> <!-- card-body -->			
+			</div> <!-- card shadow -->
+			
+			<div class = "card shadow mb-5">
+				<div class = "card-header">
+					<h4 class = "mt-10">
+						Payment Method <span class= "payment_method_content"></span>
+					</h4>
+				</div>
+				<div class = "card-body">
+					<div class = "container-fluid">
+						<div class = "row">
+						
+							<div class = "col-md-4 text-center">
+								<img class = "img img-responsive responsive payment-method" display-value = "GCASH" height = "60px" rel = "1"  src = "{% static 'website/images/payment-method/gcash.jpg' %}"/>		
+							</div>									
+									
+							<div class = "col-md-4 text-center">
+								<img class = "img img-responsive responsive payment-method" display-value = "PALAWAN" height = "60px" rel = "2"  src = "{% static 'website/images/payment-method/palawan.jpg' %}"/>		
+							</div>	
+							
+							<div class = "col-md-4 text-center">					
+								<img class = "img img-responsive responsive payment-method" display-value = "CASH" height = "60px" rel = "3"  src = "{% static 'website/images/payment-method/cash.jpg' %}"/>							
+							</div>							
+							
+							<input type = "hidden" name = "payment_method" id = "payment_method"/>						
+							
+						</div> <!-- row Account Information / Register -->
+					</div> <!-- container-fluid -->
+				</div> <!-- card-body -->			
+			</div> <!-- card shadow -->
+			
+			<div class = "card shadow mb-5">
+				<div class = "card-header">
+					<h4 class = "mt-10">
+						Payment Term <span class= "payment_term_content"></span>
+					</h4>
+				</div>
+				<div class = "card-body">
+					<div class = "container-fluid">
+						<div class = "row">
+						
+							<div class = "col-md-12">							
+								<h3 class = "btn btn-warning payment-term btn-lg btn-block" display-value = "Partial Payment" rel = "1">Partial Payment</h3>		
+								<h3 class = "btn btn-success payment-term btn-lg btn-block" display-value = "Full Payment" rel = "2">Full Payment</h3>	
+							</div>									
+									
+							<div class = "col-md-6">
+								<div class = "form-group">							
+								<button type = "submit" class="btn btn-main mt-20 btn-right">Submit</button>
+							</div>		
+							
+													
+							
+							<input type = "hidden" name = "payment_term" id = "payment_term"/>
+							
+						
+							
+							</form>
+													
+						</div> <!-- row Account Information / Register -->
+					</div> <!-- container-fluid -->
+				</div> <!-- card-body -->			
+			</div> <!-- card shadow -->
+			
+			
+			
+
+	</div> <!-- End container -->
+</section> <!-- End section -->
+
+
+
+	<!-- Start Pricing section
+		=========================================== -->
+		
+<section class="pricing-table " id="pricing">
+	<div class="container">
+		<div class="row">
+
+			<!-- section title -->
+			<div class="col-12">
+				<div class="title title-white text-center ">
+					<h2>Our Featured Courses</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium soluta deserunt eaque, est, quia hic
+						odit sed incidunt officiis quidem.</p>
+					<div class="border"></div>
+				</div>
+			</div>
+			<!-- /section title -->
+
+			<!-- single pricing table -->
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="pricing-item">
+
+					<!-- plan name & value -->
+					<div class="price-title">
+						<h3>Basic</h3>
+						<strong class="value">P15,000 </strong>
+						<p>Perfect for single freelancers who work by themselves</p>
+					</div>
+					<!-- /plan name & value -->
+
+					<!-- plan description -->
+					<ul>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Driving Routes</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to Drive as a Friend</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to negotiate with MMDA and LTFRB</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Road Signs</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Basic Drifting</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Basic Engine Assembly</li>
+					</ul>
+					<!-- /plan description -->
+
+					<!-- signup button -->
+					<a class="btn btn-main" href="#">Signup</a>
+					<!-- /signup button -->
+
+				</div>
+			</div>
+			<!-- end single pricing table -->
+
+			<!-- single pricing table -->
+			<div class="col-md-4 col-sm-6 col-xs-12  ">
+				<div class="pricing-item">
+
+					<!-- plan name & value -->
+					<div class="price-title">
+						<h3>Standard</h3>
+						<strong class="value">P25,000</strong>
+						<p>Suitable for small businesses with up to 5 employees</p>
+					</div>
+					<!-- /plan name & value -->
+
+					<!-- plan description -->
+					<ul>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Driving Principles</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Do's and Don'ts in Driving</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Manual and Automatic Engine</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Basic to Advanced Drifting</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to unlock clamps</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to make an emergency ride</li>
+					</ul>
+					<!-- /plan description -->
+
+					<!-- signup button -->
+					<a class="btn btn-main" href="#">Signup</a>
+					<!-- /signup button -->
+
+				</div>
+			</div>
+			<!-- end single pricing table -->
+
+			<!-- single pricing table -->
+			<div class="col-md-4 col-sm-6 col-xs-12 ">
+				<div class="pricing-item">
+
+					<!-- plan name & value -->
+					<div class="price-title">
+						<h3>Advanced</h3>
+						<strong class="value">P50,000</strong>
+						<p>Great for large businesses with more than 5 employees</p>
+					</div>
+					<!-- /plan name & value -->
+					
+				
+
+					<!-- plan description -->
+					<ul>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Advanced Drifting</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Upgrading your own Engine</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> How to convert your car from Manual to Automatic</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Spray Paint</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Self Driving</li>
+						<li><i class="tf-ion-ios-arrow-forward"></i> Overhauling Engine</li>
+					</ul>
+					<!-- /plan description -->
+
+					<!-- signup button -->
+					<a class="btn btn-main" href="#">Signup</a>
+					<!-- /signup button -->
+
+				</div>
+			</div>
+			<!-- end single pricing table -->
+
+
+		</div> <!-- End row -->
+	</div> <!-- End container -->
+</section> <!-- End section -->
+
+	
+					
+{% endblock %}
+

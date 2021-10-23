@@ -1,0 +1,494 @@
+
+				{% extends 'student_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+						
+						{% if role_id == 1 %}
+						
+							 <h1 class="h3 mb-0 text-gray-900 font-weight-bold">
+							 
+								Welcome Applicant!
+								<small>Thank you for choosing Cruiser Driving School!</small><br/><br/>
+																		
+								<small>To make your application successful, Click Pay Now at the bottom right. If you're done, you will be marked as FULLY PAID</small>
+								
+							 </h1>
+							
+						{% else %}
+							 <h1 class="h3 mb-0 text-gray-800">Student Dashboard</h1>
+						{% endif %}						
+						
+						
+						
+						
+                     
+                    </div>
+
+					
+						{% for message in messages %}
+							<h4 class = "alert alert-success alert-dismissible fade show" role = "alert">
+								<strong> {{ message }} </strong>
+								<button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+									<span aria-hidden = "true"> &times; </span>
+								</button>
+							</h4>
+						{% endfor %}
+					
+						<!-- Content Row -->
+						<div class="row" {% if role_id != 1 %} style = "display:none;" {% endif %}>
+						 
+
+							<!-- Earnings (Monthly) Card Example -->
+							<div class="col-xl-8 col-md-6 mb-4">
+							
+								 <div class="card shadow py-2 mb-2">
+									<div class = "card-header">
+										<div class = "card-title">
+											<h5>PERSONAL INFORMATION</h5>
+										</div>
+									</div>
+									<div class="card-body">
+										<div class="row align-items-center">
+										
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Full Name</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ fullname }}</div>
+											</div>
+											
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Account Username</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ username }}</div>
+											</div>											
+											
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Gender</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ gender }}</div>
+											</div>
+										
+										
+										</div> <!-- end row -->
+										
+										<div class="row my-4 align-items-center">
+																					
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Birthdate</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ birthdate }}</div>
+											</div>
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Age</div>											
+													
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ age }}</div>
+											</div>										
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Civil Status
+												</div>											
+													
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ civil_status }}</div>
+											</div>	
+										</div> <!-- end row -->
+										
+									</div>
+								</div> <!-- card shadow personal information -->
+								
+								
+								
+								<div class="card shadow py-2">
+									<div class = "card-header">
+										<div class = "card-title">
+											<h5>CONTACT INFORMATION</h5>
+										</div>
+									</div>
+									<div class="card-body">
+										<div class="row no-gutters align-items-center">
+										
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Address</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ complete_address }}</div>
+											</div>
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Email Address</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ email_address }}</div>
+											</div>
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">
+													Phone Number</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ contact_number }}</div>
+											</div>																				
+											
+										</div> <!-- end row -->
+									</div>
+								</div> <!-- card shadow personal information -->
+								
+							</div>
+
+							  <!-- Earnings (Monthly) Card Example -->
+							<div class="col-xl-4 col-md-6 mb-4">
+								 <div class="card shadow h-100 py-2">
+									
+									<div class = "card-header">
+										<div class = "card-title text-success">
+											<h5>COURSE DETAILS AND PAYMENT</h5>
+										</div>
+									</div>
+									
+									<div class="card-body">
+									
+										<div class="row align-items-center my-4">
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Category </div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ category_name }}</div>
+											</div>
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Course </div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">{{ course_name }}</div>
+											</div>											
+										</div> <!-- end row -->
+										
+										<div class="row align-items-center my-4">
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Payment Term
+												</div>
+													
+													{% if payment_term == '1' %}
+														<div class="h5 mb-0 font-weight-bold text-gray-800">Partial and Full Payment</div>
+													{% else %}
+														<div class="h5 mb-0 font-weight-bold text-gray-800">Full Payment</div>
+													{% endif %}
+												
+											</div>
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Payment Method
+												</div>
+												
+											
+												<div class="h5 mb-0 font-weight-bold text-gray-800">
+													{% get_payment_method_by_id payment_method|stringformat:"s" payment_method_list %}
+												</div>
+													
+												
+												
+											</div>											
+											
+										</div> <!-- end row -->
+										
+										<div class="row align-items-center">
+										
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Amount
+												</div>												
+												
+												<div class="h4 mb-0 font-weight-bold text-gray-800"> PHP {{ amount | floatformat:2 }}</div>										
+											</div>		
+											
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													
+												</div>												
+												
+												<div class="h4 mb-0 font-weight-bold text-gray-800"></div>										
+											</div>
+										
+										</div> <!-- end row -->										
+										
+										<div class="row align-items-center my-4">
+											{% if sales_transaction_list != "--" %}
+												{% for sales in sales_transaction_list %}
+												
+													<div class="col mr-2">
+														<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+															Reference Number/Control Number
+														</div>
+														<div class="h5 mb-0 font-weight-bold text-gray-800">
+															{{ sales.payment_reference_no }}
+															
+															{% ifnotequal sales.payment_method|stringformat:"s" "3" %}
+																{% ifnotequal sales.status|stringformat:"s" "1" %}
+																	(Pending)
+																{% endifnotequal %}
+															{% endifnotequal %}
+															
+															
+															{% ifnotequal sales.payment_method|stringformat:"s" "3" %}
+																{% ifnotequal sales.status|stringformat:"s" "1" %}
+																	<button data-toggle = "modal" data-target = "#edit-reference-no" class = "btn btn-sm btn-outline-inverse"><i class = "fa fa-edit"></i> Edit </button>
+																{% endifnotequal %}
+															{% endifnotequal %}
+															
+															{% ifequal sales.status|stringformat:"s" "1" %}
+																{% ifequal sales.for_payment_term|stringformat:"s" "2" %}		
+																
+																	<h4 class = "font-weight-bold text-gray-900  my-4">
+																		FULLY PAID<br/>(PHP {{ sales.amount_paid|floatformat:2 }})
+																	</h4>
+																	
+																	<h5>
+																	
+																		<small>Payment Declared on<br/>{{ sales.datetime_paid }}</small>
+																		<small>Balance: PHP {{ sales.amount_balance }}</small><br/>
+																		
+																	</h5>
+																	
+																{% endifequal %}
+															{% endifequal %}
+															
+															{% ifequal sales.status|stringformat:"s" "1" %}
+																{% ifequal sales.for_payment_term|stringformat:"s" "1" %}		
+																
+																	<h4 class = "font-weight-bold text-gray-900 my-4">
+																	
+																	PARTIALLY PAID<br/>(PHP {{ sales.amount_paid|floatformat:2 }})
+																	
+																	
+																	</h4>
+																	
+																	<h5>
+																	
+																		<small>Payment Declared on<br/>{{ sales.datetime_paid }}</small>
+																		<small>Balance: PHP {{ sales.amount_balance }}</small><br/>
+																		
+																	</h5>
+																	
+																{% endifequal %}
+															{% endifequal %}
+															
+														</div>
+													</div>	
+												
+												{% endfor %}
+											{% endif %}
+											
+										</div> <!-- end row -->		
+										
+										
+										
+										
+									</div> <!-- card-body -->
+												
+									
+									<div class = "card-footer {% show_pay_now sales_transaction_list %}">								 
+										<button class = "btn btn-success btn-lg float-right" data-toggle = "modal" data-target = "#pay-now">Pay Now</button>
+									</div>
+												
+											
+										
+									
+								
+									
+								</div>
+							</div>					
+
+						</div> <!-- Content Row -->     
+						
+						
+						<div class = "modal fade in" id = "pay-now">
+							<div class = "modal-dialog">
+								<div class = "modal-content">
+									<div class = "modal-header">
+										<h2 class = "text-uppercase font-weight-bold text-gray-900"> Payment for {{ course_name }} Course <small> ({{ category_name }}) </small> </h2>
+									</div>
+									<div class = "modal-body">
+										<form method = "POST" action  = "payment">
+											{% csrf_token %}
+											
+											<div class = "form-group">
+												<label for = "label">Payment Term</label>
+																								
+												<h5 class = "text-gray-900 font-weight-bold">
+																							
+													{% payment_term_label_pay_now_modal payment_term for_payment_term partial_payment sales_transaction_list %}	
+													
+													<input type = "hidden" name = "for_payment_term" value = "{% payment_term_identifier sales_transaction_list payment_term %}"/>													
+																										
+												</h5>												
+													
+															
+												<input type = "hidden" name = "payment_term" value = "{{ payment_term }}"/>				
+												
+												
+												
+												<input type = "hidden" name = "payment_phone" value = "{{ payment_phone }}"/>
+												<input type = "hidden" name = "user_id" value = "{{ user_id }}"/>
+												<input type = "hidden" name = "contact_number" value = "{{ contact_number }}"/>
+												<input type = "hidden" name = "enrolment_id" value = "{{ enrolment_id }}"/>
+												<input type = "hidden" name = "payment_method_input" value = "{{ payment_method }}"/>
+												
+											</div>
+											
+											<div class = "form-group">
+												<label for = "label">Payment Method</label>
+												<h5 class = "text-gray-900 font-weight-bold">												
+													
+													{% get_payment_method_by_id payment_method|stringformat:"s" payment_method_list%}
+																										
+												</h5>
+											</div>
+										
+											{% if payment_method == '1' %}
+												<div class = "form-group">
+													<h5 class = "text-gray-900">SEND YOUR PAYMENT HERE <b>{{ payment_phone }}</b><br/>and INPUT YOUR REFERENCE NUMBER HERE:</h5>
+													<input type = "text" id = "label" class = "form-control" placeholder = "GCASH Payment Reference No." name = "payment_reference_no"/>
+												</div>									
+											{% endif %}
+											
+											{% if payment_method == '2' %}
+												<div class = "form-group">
+													<h5 class = "text-gray-900">ADDRESS YOUR PAYMENT HERE <b>{{ payment_phone }}</b><br/>and INPUT YOUR CONTROL NUMBER HERE:</h5>
+													<input type = "text" id = "label" class = "form-control" placeholder = "GCASH Payment Reference No." name = "payment_reference_no"/>
+												</div>									
+											{% endif %}
+											
+											{% if payment_method == '3' %}
+												<div class = "form-group">
+													<h5 class = "text-gray-900">PAY YOUR COURSE FEE DIRECTLY TO CRUISER DRIVING SCHOOL OFFICE</h5>
+													<h4>Wait for Payment Confirmation and Schedule Upon Cash Payment</h4>
+												</div>									
+											{% endif %}
+											
+											{% if payment_method == '3' %}
+											
+											{% else %}
+												<div class = "form-group">																		
+													<button class = "btn btn-success" type = "submit" role = "button">Submit</button>
+												</div>
+											{% endif %}
+											
+											
+											
+										</form>
+									</div>
+								</div>
+							</div>
+						</div> <!-- modal pay now -->
+						
+						<div class = "modal fade in" id = "edit-reference-no">
+							<div class = "modal-dialog">
+								<div class = "modal-content">
+									<div class = "modal-header">
+										<h2 class = "text-uppercase font-weight-bold text-gray-900"> Edit Reference Number </h2>
+									</div>
+									<div class = "modal-body">
+										<form method = "POST" action  = "reference_no_update">
+											{% csrf_token %}										
+										
+										
+											<div class = "form-group">
+												<h5 class = "text-gray-900">Reference Number</h5>
+												
+												{% if sales_transaction_list != "--" %}
+													{% for sales in sales_transaction_list %}
+														{% ifnotequal sales.status|stringformat:"s" "1" %}
+															<input type = "hidden" name = "sales_transaction_id" value = "{{ sales.id }}"/>
+															<input type = "text" id = "label" class = "form-control" value = "{{ sales.payment_reference_no }}" placeholder = "Reference No./Control Number" name = "payment_reference_no"/>
+														{% endifnotequal %}
+													{% endfor %}
+												{% else %}
+													<h5>Reference Number Not Found</h5>
+												{% endif %}
+												
+											
+											</div>								
+											
+											{% if payment_method != '3' %}
+												<div class = "form-group">																		
+													<button class = "btn btn-success" type = "submit" role = "button">SAVE</button>
+												</div>
+											{% endif %}
+										</form>
+									</div>
+								</div>
+							</div>
+						</div> <!-- modal pay edit reference number -->
+					
+				
+						<!-- Content Row -->
+						<div class="row" {% ifequal role_id|stringformat:"s" "1" %} style = "display:none;" {% endifequal %}>
+						 
+
+							<!-- Earnings (Monthly) Card Example -->
+							<div class="col-xl-4 col-md-6 mb-4">
+								 <div class="card shadow h-100 py-2">
+									<div class="card-body">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Total Number of Hour(s) Acquired</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">255</div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-clock fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							  <!-- Earnings (Monthly) Card Example -->
+							<div class="col-xl-4 col-md-6 mb-4">
+								 <div class="card shadow h-100 py-2">
+									<div class="card-body">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Total Number of Hour(s) Left</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-clock fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<!-- Earnings (Monthly) Card Example -->
+							<div class="col-xl-4 col-md-6 mb-4">
+								 <div class="card shadow h-100 py-2">
+									<div class="card-body">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+													Attendance by Lesson</div>
+												<div class="h5 mb-0 font-weight-bold text-gray-800">215</div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-pencil fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div> <!-- Content Row -->     
+
+					
+					
+					
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}
