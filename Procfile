@@ -1,1 +1,1 @@
-web: gunicorn cruiser_driving.wsgi --log-file -
+web: gunicorn cruiser_driving.wsgi
