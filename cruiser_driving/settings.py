@@ -95,16 +95,18 @@ WSGI_APPLICATION = 'cruiser_driving.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dah0betphdn1lj',
-        'USER': 'vrzgpoxxhjhfcj',
-        'PASSWORD': 'c99f860b5e7f98ad22a2e3fba83046a5307899be550ba5eb3bc704f28f60f72b',
-        'HOST':'ec2-34-239-55-93.compute-1.amazonaws.com',
+        'NAME': 'cruiser_driving',
+        'USER': 'postgres',
+        'PASSWORD': '9944',
+        'HOST':'127.0.0.1',
         'PORT':'5432',
     }
 }
+
 
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
