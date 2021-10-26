@@ -21,5 +21,5 @@ path('activate/<uidb64>/<token>',views.activate, name = 'activate'),
  
 ]
 
-handler404 = ‘website.views.error404’
+
 
