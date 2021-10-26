@@ -98,8 +98,12 @@ WSGI_APPLICATION = 'cruiser_driving.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dah0betphdn1lj',
+        'USER': 'vrzgpoxxhjhfcj',
+        'PASSWORD': 'c99f860b5e7f98ad22a2e3fba83046a5307899be550ba5eb3bc704f28f60f72b',
+        'HOST':'ec2-34-239-55-93.compute-1.amazonaws.com',
+        'PORT':'5432',  
     }
 }
 
