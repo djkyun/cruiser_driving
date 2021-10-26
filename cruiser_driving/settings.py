@@ -38,7 +38,7 @@ SECRET_KEY = 'mksm&9x)#xt(#eftehe3#qcrr0@js5d!lq#cjket7!8=0j3m#j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['cruiserdriving.herokuapp.com']
 
 
 # Application definition
