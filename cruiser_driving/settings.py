@@ -38,7 +38,7 @@ SECRET_KEY = 'mksm&9x)#xt(#eftehe3#qcrr0@js5d!lq#cjket7!8=0j3m#j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cruiserdriving.herokuapp.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -151,7 +151,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
