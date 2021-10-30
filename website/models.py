@@ -28,7 +28,7 @@ class UserRecords(models.Model):
     gender = models.CharField(max_length = 1, default = 'n')
     civil_status = models.CharField(max_length = 1, default = '1', null = True, blank = True)
     datetime_registered = models.DateTimeField(default = datetime.datetime.now())
-    role_id = models.IntegerField(default = 1)
+    role_id = models.IntegerField(default = 1)    
        
     def __str__(self):
         return self.id

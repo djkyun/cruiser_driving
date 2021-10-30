@@ -27,15 +27,15 @@ def login_instructor(request):
         
         user_credential_info    = authenticate(username = username_input, password = password_input)
         user_id                 = user_credential_info.id      
-        
-        user_list               = UserRecords.objects.get(authentication_user_id = user_id)
-        fullname                = user_list.firstname +' '+user_list.lastname
-        role_id                 = user_list.role_id
-        
+               
         userlist                = UserRecords.objects.all().order_by('id')
         
         
-        if user_credential_info is not None:        
+        if user_credential_info is not None:     
+
+           user_list             = UserRecords.objects.get(authentication_user_id = user_id)
+           fullname              = user_list.firstname +' '+user_list.lastname
+           role_id               = user_list.role_id
           
            if(str(role_id) == "3"):
             

@@ -56,6 +56,7 @@
                                         <tr>
                                             <th><strong>#</strong></th>
                                             <th><strong>Full Name</strong></th>
+                                            <th>License Type</th>       
                                             <th>Course</th>       
 											<th>Course Fee</th>
                                             <th>Payment Method</th>                                            
@@ -77,6 +78,10 @@
 											<img height = "50px" src = "{% static 'student_page/img/account_image/1.jpg' %}" data-toggle = "modal" data-target = "#modal-image-{{users.id}}" class = "img img-responsive rounded-circle m-1"/>
 											<br/>{{ users.fullname }}
 											
+											</td>
+											
+											<td>												
+												{% get_license_type_from_authentication_user_id users.authentication_user_id enrolment_list %}
 											</td>
 											
                                             <td>										
@@ -102,17 +107,13 @@
 											
 										
 											{% for transac in enrolment_list %}
-												{% if transac.user_id == users.authentication_user_id %}
-																
-													
-												
+												{% if transac.user_id == users.authentication_user_id %}												
 													
 													<strong>
 														<span class = "text-uppercase">
 															{% get_payment_method_by_id transac.payment_method|stringformat:"s" paymentmethod_list %}
 														</span>
-													</strong>
-													
+													</strong>												
 												
 												{% endif %}
 											{% endfor %}		

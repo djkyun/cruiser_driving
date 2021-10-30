@@ -273,6 +273,33 @@ def get_username(authentication_user_id, user_list):
             value_var = str(ul.username)
             
     return value_var
+    
+@register.simple_tag
+def get_license_type_from_authentication_user_id(authentication_user_id, enrolment_list):
+    value_var = ''
+    license_type_id = ''
+    
+    for el in enrolment_list:
+        if str(el.user_id) == str(authentication_user_id):
+            license_type_id = el.license_type
+            
+    value_var = license_type_id
+    
+    if str(license_type_id) == "0":
+        value_var = 'None'
+        
+    if str(license_type_id) == "1":
+        value_var = 'Student'
+
+    if str(license_type_id) == "2":
+        value_var = 'Non-Professional'
+        
+    if str(license_type_id) == "3":
+        value_var = 'Professional'    
+        
+    return value_var  
+
+    
        
     
 @register.simple_tag

@@ -257,10 +257,9 @@
 				category_value = $('.selected-category option:selected').html();				
 				category_id = $('.selected-category option:selected').val();
 				
-			
 				
 				$.get('get_course_ids_from_category',{'category_id':category_id},function(s){
-					alert(s);
+					
 				});	
 				
 				$('.selected_category_content').html('<small class = "badge badge-success"> Selected: '+category_value+'</span>');

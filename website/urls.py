@@ -1,5 +1,7 @@
 from django.urls import path, reverse
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 #website urls
 
@@ -20,6 +22,8 @@ path('activate/<uidb64>/<token>',views.activate, name = 'activate'),
 
  
 ]
+
+urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 
 
 

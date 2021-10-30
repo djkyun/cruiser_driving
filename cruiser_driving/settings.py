@@ -14,7 +14,7 @@ from pathlib import os, Path
 from . info import *
 import django_heroku
 import dj_database_url
-from decouple import config
+#from decouple import config
 
 
 EMAIL_USE_TLS = EMAIL_USE_TLS
@@ -49,13 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',  
-    'django.contrib.humanize',  
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'whitenoise.runserver_nostatic',
     'admin_page',
     'instructor_page',
     'student_page',
-    'website',   
+    'website',
 ]
 
 MIDDLEWARE = [
@@ -95,6 +95,28 @@ WSGI_APPLICATION = 'cruiser_driving.wsgi.application'
 
 
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'dah0betphdn1lj',
+#        'USER': 'vrzgpoxxhjhfcj',
+#        'PASSWORD': 'c99f860b5e7f98ad22a2e3fba83046a5307899be550ba5eb3bc704f28f60f72b',
+#        'HOST':'ec2-34-239-55-93.compute-1.amazonaws.com',
+#        'PORT':'5432',
+#    }
+#}
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'cruiser_driving',
+#        'USER': 'postgres',
+#        'PASSWORD': '9944',
+#        'HOST':'127.0.0.1',
+#        'PORT':'5432',
+#    }
+#}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -105,6 +127,7 @@ DATABASES = {
         'PORT':'5432',  
     }
 }
+
 
 
 db_from_env = dj_database_url.config(conn_max_age=600)

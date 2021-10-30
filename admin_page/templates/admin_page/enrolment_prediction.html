@@ -7,7 +7,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Enrolment Prediction</h1>
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Enrolment Prediction Report</h1>
 					
                     <p class="mb-4">
 						Enrolment Prediction
@@ -16,90 +16,73 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">Enrolment Prediction</h5>
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">List of all predicted students that will pass</h5>
                         </div>
                         <div class="card-body">
-                           
-                           <div class="row">
-
-                        <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Enrolment Prediction as of {{ datetime_now }}</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Full Name</th>
+                                            <th>Course</th>
+                                            <th>Contact Details</th>                                           
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                   
+                                    <tbody>                                     
+										
+										{% for users in students_list %}
+										
+										 <tr>
+											<td>{{ forloop.counter }}</td>
+                                            <td>{{ users.lastname }}, {{ users.firstname }}</td>
+                                            <td>Course</td>
+                                            <td>
+												{{ users.contact_number }}
+											</td>                                          
+                                            
+                                            <td>
+											
+												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">Edit</button>
+												
+												<div class = "modal fade in" id = "modal-edit-student-{{ users.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold"> {{ users.lastname }}, {{ users.firstname }} </h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action  = "admin_page/add_user">
+																	{% csrf_token %}
+																	<div class = "form-group">
+																		<label id = "firstname">First Name</label>
+																		<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
+																	</div>
+																	<div class = "form-group">
+																		<label id = "lastname">Last Name</label>
+																		<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
+																	</div>
+																	<div class = "form-group">																		
+																		<button class = "btn btn-success" type = "submit" role = "button">Save</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											
+											</td>
+                                        </tr>
+										
+										{% endfor %}
+                                        
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-					
-                    <!-- Content Row -->
-					
-                        </div> <!-- card-body enrolment prediction -->
                     </div>
 
                 </div>

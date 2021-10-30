@@ -148,6 +148,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Full Name</th>                                           
+                                            <th>Username</th>                                          
+                                                                                
                                             <th>Contact Details</th>                                     
                                             <th>Specialization</th>
                                             <th>Subjects Handled</th>
@@ -163,6 +165,11 @@
 											 <tr>
 												<td>{{ forloop.counter }}</td>
 												<td>{{ users.fullname }}</td>
+												<td>
+												
+												{% get_username users.authentication_user_id user_account_list %}
+												
+												</td>											
 												<td>
 													{{ users.email_address }} | {{ users.contact_number }}
 												</td>

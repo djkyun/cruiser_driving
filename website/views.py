@@ -177,6 +177,8 @@ def register_process(request):
     gender_input                = request.POST['gender'] 
     civil_status_input          = request.POST['civil_status']
     
+    license_type_input          = request.POST['license_type']
+    
     course_selected             = request.POST['preferred_course']
     payment_method_input        = request.POST['payment_method']
     payment_term_input          = request.POST['payment_term']
@@ -253,6 +255,7 @@ def register_process(request):
                     
                     user_enrolment = Enrolment(
                         user_id = inserted_id,
+                        license_type = license_type_input,
                         enrolled_course = course_selected,
                         payment_method = payment_method_input,
                         payment_term = payment_term_input,

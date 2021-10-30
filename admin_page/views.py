@@ -14,6 +14,7 @@ import random
 # Create your views here.
 
 url_base = '127.0.0.1:8000/'
+url_base = '127.0.0.1:8000/'
 website_name = 'Cruiser Driving School'
 total_number_applicants = UserRecords.objects.filter(role_id = '1').count()
 total_number_students =  UserRecords.objects.filter(role_id = '2').count()
@@ -37,6 +38,8 @@ def login_admin(request):
         if user_credential_info is not None:
         
            userlist = UserRecords.objects.all()
+           students_list = UserRecords.objects.filter(role_id = '2')
+           
            login_form(request, user_credential_info)   
            
            if user_credential_info.is_superuser == 1:
@@ -50,6 +53,7 @@ def login_admin(request):
                             'menu_name':'Home',
                             'username': username_input,
                             'userlist': userlist,
+                            'students_list': students_list,
                             'url_base': url_base,
                             'total_number_applicants': total_number_applicants,
                             'total_number_students': total_number_students,
@@ -401,6 +405,7 @@ def students_admin(request):
 def instructors(request):
    
     userlist                        = UserRecords.objects.filter(role_id = 3).order_by('lastname') 
+    user_account_list               = User.objects.all()
     courselist                      = Course.objects.all()
     instructor_specialization_list  = InstructorSpecialization.objects.all()
     instructor_count                = len(userlist)
@@ -428,6 +433,7 @@ def instructors(request):
             'username': username,
             'fullname': fullname,
             'courselist': courselist,
+            'user_account_list': user_account_list,
             'instructor_specialization_list': instructor_specialization_list,
             'userlist': userlist,
             'instructor_count': instructor_count,
@@ -649,6 +655,8 @@ def lessons_admin(request):
         return redirect('/admin_page')  
         
     categorylist                = Category.objects.all()
+    categorytypelist            = CategoryType.objects.all()
+    cartypelist                 = CarType.objects.all()
     courselist                  = Course.objects.all().order_by('id') 
     userlist                    = UserRecords.objects.filter(role_id = '1')
     instructor_list             = UserRecords.objects.filter(role_id = '3')
@@ -671,6 +679,8 @@ def lessons_admin(request):
             'User_list': User_list,
             'courselist': courselist,
             'categorylist': categorylist,            
+            'categorytypelist': categorytypelist,            
+            'cartypelist': cartypelist,            
             'enrolment_list': enrolment_list,
             'attendance_list': attendance_list,
             'appointment_list': appointment_list,
@@ -1285,6 +1295,7 @@ def add_category(request):
 def enrolment_prediction(request):
    
     userlist = UserRecords.objects.all().order_by('lastname') 
+    students_list = UserRecords.objects.filter(role_id = '2')
     
     if request.user.is_authenticated:
     
@@ -1308,6 +1319,7 @@ def enrolment_prediction(request):
         {
             'website_name': website_name,
             'userlist': userlist,
+            'students_list': students_list,
             'username': username,
             'fullname': fullname,
             'datetime_now': str(datetime.datetime.today()),
