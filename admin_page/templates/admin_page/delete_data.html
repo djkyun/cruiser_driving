@@ -1,0 +1,66 @@
+
+				{% extends 'admin_page/base.html' %}
+				{% block body %}
+				{% load static %}
+				{% load admin_templatetags %}
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-900 font-weight-bold">Manual Delete Data</h1>
+					
+                    <p class="mb-4">
+						Manual Delete Data
+					</p>
+					
+					{% for message in messages %}
+						<h4 class = "alert alert-success alert-dismissible fade show" role = "alert">
+							<strong> {{ message }} </strong>
+							<button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+								<span aria-hidden = "true"> &times; </span>
+							</button>
+						</h4>
+					{% endfor %}
+					
+					{% for pml in PaymentMethodList %}
+						Payment Method{{ pml.payment_method }} <br/>
+						Payment Method Image{{ pml.payment_method_image }} <br/>
+						Status {{ pml.status }} <br/><br/>
+					{% endfor %}
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-inverse text-gray-700">Manual Delete Data Form</h5>
+                        </div>
+                        <div class="card-body">
+                           <form method = "POST" action = "delete_data_process">
+							{% csrf_token %}
+							
+							<div class = "form-group">
+							
+								Lesson
+								<label for = "course_id">Course</label>
+								<select id = "course_id" name = "course_id" class = "form-control">
+									<option value = "0"> -- Select Course for Specific Lesson -- </option>
+									{% for crs in courselist %}
+										<option value = "{{ crs.id }}"> {{ crs.course_code }} | {{ crs.course_name }} </option>
+									{% endfor %}
+								</select>
+							</div>		
+										
+							<div class = "form-group">
+								<button type = "submit" class = "btn btn-success">Delete</button>
+							</div>
+						   </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            {% endblock %}

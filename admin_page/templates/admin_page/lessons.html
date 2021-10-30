@@ -94,9 +94,9 @@
 										
 										 <tr>
                                             <td>{{ forloop.counter }}</td>
-                                            <td>
-											
-												{{ ll.course_id }}
+                                            <td>									
+												
+												{% get_course_name_by_id ll.course_id courselist %}
 												
 											</td>
 											
@@ -111,6 +111,7 @@
                                             <td>
 											
 												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-lesson-{{ ll.id }}">Edit Lesson</button>
+												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-add-lesson-detail-{{ ll.id }}">Add Lesson Detail</button>
 												
 												<div class = "modal fade in" id = "modal-edit-lesson-{{ ll.id }}">
 													<div class = "modal-dialog">
@@ -122,6 +123,33 @@
 																<h3>
 																	Lesson
 																</h3>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class = "modal fade in" id = "modal-add-lesson-detail-{{ ll.id }}">
+													<div class = "modal-dialog">
+														<div class = "modal-content">
+															<div class = "modal-header">
+																<h2 class = "text-uppercase font-weight-bold"> Add Lesson Detail </h2>
+															</div>
+															<div class = "modal-body">
+																<form method = "POST" action = "add_lesson_detail">
+																	{% csrf_token %}
+																	<input type = "hidden" name = "lesson_id" value = "{{ ll.id }}"/>																	
+																	<input type = "hidden" name = "course_details" value = "{% get_course_details ll.course_id courselist %}"/>																	
+																	<div class = "form-group">
+																		<label for = "label">For {% get_course_details ll.course_id courselist %}</label>
+																	</div>
+																	<div class = "form-group">
+																		<label for = "label">Lesson Detail</label>
+																		<input type = "text" class = "form-control" name = "lesson_detail" placeholder = "Lesson Detail" id = "label"/>
+																	</div>
+																	<div class = "form-group">
+																		<button type = "submit" class = "btn btn-danger">Save</button>
+																	</div>
+																</form>
 															</div>
 														</div>
 													</div>

@@ -655,6 +655,7 @@ def lessons_admin(request):
     else:
         return redirect('/admin_page')  
         
+    lesson_list                 = Lesson.objects.all()
     categorylist                = Category.objects.all()
     categorytypelist            = CategoryType.objects.all()
     cartypelist                 = CarType.objects.all()
@@ -678,6 +679,7 @@ def lessons_admin(request):
             'userlist': userlist,
             'instructor_list': instructor_list,
             'User_list': User_list,
+            'lesson_list': lesson_list,
             'courselist': courselist,
             'categorylist': categorylist,            
             'categorytypelist': categorytypelist,            
@@ -774,6 +776,79 @@ def add_lesson(request):
         }
     )
 
+def add_lesson_detail(request):
+   
+    if request.user.is_authenticated:
+        username = request.user
+        user_id = username.id
+    else:
+        return redirect('/admin_page') 
+
+
+    if(request.method == "POST"):
+
+        course_details = request.POST['course_details']
+        lesson_id_input = request.POST['lesson_id']
+        lesson_detail_input = request.POST['lesson_detail']
+        
+        lesson_detail_records = LessonDetail(
+            lesson_id = lesson_id_input,
+            lesson_detail = lesson_detail_input
+        )
+      
+        lesson_detail_records.save()
+        
+        added_details = course_details + " for lesson number " + lesson_id_input
+            
+        messages.success(request,"Lesson Detail Added to " + added_details + "")
+        
+        
+    categorylist                = Category.objects.all()
+    categorytypelist            = CategoryType.objects.all()
+    cartypelist                 = CarType.objects.all()
+    courselist                  = Course.objects.all().order_by('id') 
+    userlist                    = UserRecords.objects.filter(role_id = '1')
+    instructor_list             = UserRecords.objects.filter(role_id = '3')
+    enrolment_list              = Enrolment.objects.all().order_by('id')
+    paymentmethod_list          = PaymentMethodList.objects.all().order_by('id') 
+    sales_transaction_list      = SalesTransaction.objects.all()
+    appointment_list            = Appointment.objects.all()
+    attendance_list             = Attendance.objects.all()
+    schedule_type_list          = ScheduleType.objects.all().order_by('id') 
+
+    User_list                   = User.objects.all()
+
+    return render(
+        request,
+        'admin_page/lessons.html',
+        {
+            'website_name': website_name,
+            'userlist': userlist,
+            'instructor_list': instructor_list,
+            'User_list': User_list,
+            'courselist': courselist,
+            'categorylist': categorylist,            
+            'categorytypelist': categorytypelist,            
+            'cartypelist': cartypelist,            
+            'enrolment_list': enrolment_list,
+            'attendance_list': attendance_list,
+            'appointment_list': appointment_list,
+            'schedule_type_list': schedule_type_list,
+            'paymentmethod_list': paymentmethod_list,
+            'sales_transaction_list': sales_transaction_list,
+            'username': username,
+            'user_id': user_id,
+            'menu_name':'Applicants',
+            'get_category_id':get_category_id(10),
+            'total_number_applicants': total_number_applicants,
+            'total_number_students': total_number_students,
+            'total_number_completed_students': total_number_completed_students,
+            'average_number_students_per_course': average_number_students_per_course,
+            'average_age_students': average_age_students,
+            'enrolled_hours_ratio': enrolled_hours_ratio
+        }
+    )
+    
 def appointments_admin(request):
    
     userlist                = UserRecords.objects.all().order_by('lastname') 
@@ -1376,9 +1451,11 @@ def enrolment_prediction(request):
     categorytypelist = CategoryType.objects.all()
     enrolment_list = Enrolment.objects.all()
     
-    for_data_prediction = sorted(
-        chain(students_list,enrolment_list)        
-    )
+    #for_data_prediction = sorted(
+        #chain(students_list,enrolment_list)        
+    #)
+    
+    for_data_prediction = students_list
     
     data_prediction = for_data_prediction.only("firstname","lastname")
     
@@ -1532,6 +1609,85 @@ def insert_data_process(request):
             'fullname': fullname,
             'payment_method_list': paymentmethod_list,
             'menu_name':'Manual Insert Data'
+        }
+    )
+    
+def delete_data(request):
+   
+    userlist = UserRecords.objects.all().order_by('lastname') 
+    paymentmethod_list = PaymentMethodList.objects.all()
+    courselist = Course.objects.all()
+    
+    if request.user.is_authenticated:
+    
+        username = request.user
+        user_id = username.id
+        
+        try:
+            user_list = UserRecords.objects.get(authentication_user_id = user_id)
+            fullname = user_list.firstname +' '+user_list.lastname  
+        except:
+            user_list = ''
+            fullname = ''
+     
+    else:
+        return redirect('/')
+     
+     
+    return render(
+        request,
+        'admin_page/delete_data.html',
+        {
+            'website_name': website_name,
+            'userlist': userlist,
+            'courselist': courselist,
+            'username': username,
+            'fullname': fullname,
+            'payment_method_list': paymentmethod_list,
+            'menu_name':'Manual Delete Data'
+        }
+    )
+    
+def delete_data_process(request):
+   
+    userlist = UserRecords.objects.all().order_by('lastname') 
+    paymentmethod_list = PaymentMethodList.objects.all()
+    
+    if request.user.is_authenticated:
+    
+        username = request.user
+        user_id = username.id
+        
+        try:
+            user_list = UserRecords.objects.get(authentication_user_id = user_id)
+            fullname = user_list.firstname +' '+user_list.lastname  
+        except:
+            user_list = ''
+            fullname = ''
+     
+    else:
+        return redirect('/')
+        
+        if(request.method == "POST"):
+        
+            course_id_input = request.POST['course_id']
+            
+            lesson_record = Lesson.objects.filter(course_id = course_id_input)
+            lesson_record.delete()
+
+            messages.success(request, "Course ID based from Lesson Deleted!")
+     
+     
+    return render(
+        request,
+        'admin_page/delete_data.html',
+        {
+            'website_name': website_name,
+            'userlist': userlist,
+            'username': username,
+            'fullname': fullname,
+            'payment_method_list': paymentmethod_list,
+            'menu_name':'Manual Delete Data'
         }
     )
     
