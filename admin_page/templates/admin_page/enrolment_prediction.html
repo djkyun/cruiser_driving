@@ -2,6 +2,7 @@
 				{% extends 'admin_page/base.html' %}
 				{% block body %}
 				{% load static %}
+				{% load admin_templatetags %}
 				
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -12,6 +13,10 @@
                     <p class="mb-4">
 						Enrolment Prediction
 					</p>
+					
+					{% for dp in data_prediction %}
+						{{ dp.firstname }}
+					{% endfor %}
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -38,7 +43,11 @@
 										 <tr>
 											<td>{{ forloop.counter }}</td>
                                             <td>{{ users.lastname }}, {{ users.firstname }}</td>
-                                            <td>Course</td>
+                                            <td>
+											
+												{% get_course_category_by_enrolment_id users.authentication_user_id enrolment_list courselist categorylist cartypelist categorytypelist %}
+											
+											</td>
                                             <td>
 												{{ users.contact_number }}
 											</td>                                          

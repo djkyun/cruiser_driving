@@ -245,8 +245,25 @@ class Lesson(models.Model):
     
     id                              = models.AutoField(primary_key = True)
     course_id                       = models.CharField(max_length = 10, default = '1')
-    lesson_number                   = models.IntegerField(default = 1)
-    lesson_detail                   = models.CharField(max_length = 125, default = 'orientation')
+    lesson_number                   = models.IntegerField(default = 1)   
+    
+    def __str__(self):
+        return self.id
+        
+class LessonDetailTitle(models.Model):
+
+    id                              = models.AutoField(primary_key = True)
+    lesson_detail_id                = models.IntegerField(default = 1)
+    lesson_detail_title             = models.CharField(max_length = 125, default = 'lesson_detail_title')
+    
+    def __str__(self):
+        return self.id
+        
+class LessonDetail(models.Model):
+
+    id                              = models.AutoField(primary_key = True)
+    lesson_id                       = models.IntegerField(default = 1)
+    lesson_detail                   = models.CharField(max_length = 125, default = 'lesson_detail')
     
     def __str__(self):
         return self.id
