@@ -6,6 +6,7 @@ register = template.Library()
 @register.simple_tag
 def get_category_name_by_id(cat_id, categorylist):
     
+    
     value_var = ''     
           
     for catlist in categorylist:

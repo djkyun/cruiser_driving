@@ -562,7 +562,7 @@ def remove_specialization(request):
     instructor_fullname         = request.POST['instructor_fullname']
     course_specialization       = request.POST['specialization_details']
     
-    specialization_record = InstructorSpecialization.objects.get(id = specialization_id)
+    specialization_record = InstructorSpecialization.objects.get(instructor_specs_id = specialization_id)
     specialization_record.delete()
       
     messages.success(request,"Specialization Removed from "+ instructor_fullname + ' ' + course_specialization)

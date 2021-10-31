@@ -160,7 +160,7 @@ class Attendance(models.Model):
         
 class InstructorSpecialization(models.Model):
 
-    id                               = models.AutoField(primary_key = True)
+    instructor_specs_id              = models.AutoField(primary_key = True)
     instructor_id                    = models.CharField(max_length = 125, default = '1')
     course_id                        = models.IntegerField(default = 1)
     assigned_by                      = models.CharField(max_length = 125)

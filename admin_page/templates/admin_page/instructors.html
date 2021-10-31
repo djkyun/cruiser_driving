@@ -148,8 +148,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Full Name</th>                                           
-                                            <th>Username</th>                                          
-                                                                                
+                                            <th>Username</th>                                                                           
                                             <th>Contact Details</th>                                     
                                             <th>Specialization</th>
                                             <th>Subjects Handled</th>
@@ -209,7 +208,7 @@
 																			
 																				{% csrf_token %}
 																				
-																				<input type = "hidden" name = "specialization_id" value = "{{ ispecs.id }}"/>
+																				<input type = "hidden" name = "specialization_id" value = "{{ ispecs.instructor_specs_id }}"/>
 																				<input type = "hidden" name = "instructor_fullname" value = "{{ users.fullname }}"/>
 																				<input type = "hidden" name = "specialization_details" value = "{% get_course_details ispecs.course_id courselist %}"/>
 																				
