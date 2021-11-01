@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
 from website.models import UserRecords
-from admin_page.models import Enrolment, Course, Category, SystemSettings, SalesTransaction, PaymentMethodList
+from admin_page.models import LoginHistory, Course, SystemSettings, Category, PaymentMethodList, Enrolment, SalesTransaction, Appointment, TimeScheduleAppointment, ScheduleType, Attendance, Rooms, Lesson, LessonDetailTitle, LessonDetail, InstructorSpecialization, CategoryType, CarType
+from website.models import UserRecords
 from django.contrib.auth.models import User as UserCredential
 from django.contrib.auth import login as login_form, logout as logout_form
 from django.contrib import messages
@@ -194,11 +195,34 @@ def convert_readable_date(date_here):
             
 def transaction_details(request):
 
+    if request.user.is_authenticated:
+    
+        username = request.user
+        user_id = username.id
+        
+        try:
+            user_list = UserRecords.objects.get(authentication_user_id = user_id)
+            fullname = user_list.firstname +' '+user_list.lastname  
+        except:
+            user_list = ''
+            fullname = ''
+            
+    else:
+        return redirect('/')  
+        
+    a_user_id               = user_list.authentication_user_id    
+    sales_transaction_list  = SalesTransaction.objects.filter(user_id = a_user_id);
+    course_list             = Course.objects.all();
+    enrolment_list          = Enrolment.objects.all();
+
     return render(
         request,
         'student_page/transaction_details.html',
         {
-            'menu_name':'Transaction Details'
+            'menu_name':'Transaction Details',
+            'sales_transaction_list':sales_transaction_list,
+            'course_list':course_list,
+            'enrolment_list':enrolment_list
         }
     )
     
@@ -246,11 +270,37 @@ def skillsassessments(request):
  
 def appointments(request):
 
+    if request.user.is_authenticated:
+    
+        username = request.user
+        user_id = username.id
+        
+        try:
+            user_list = UserRecords.objects.get(authentication_user_id = user_id)
+            fullname = user_list.firstname +' '+user_list.lastname  
+        except:
+            user_list = ''
+            fullname = ''
+            
+    else:
+        return redirect('/')  
+        
+    course_list             = Course.objects.all()
+    attendance_list         = Attendance.objects.all()
+    timeschedule_list       = TimeScheduleAppointment.objects.all().order_by('id')
+    appointment_list        = Appointment.objects.all().order_by('id')
+    instructor_list         = UserRecords.objects.all()
+
     return render(
         request,
         'student_page/appointments.html',
         {
-            'menu_name':'Appointments'
+            'menu_name':'Appointments',
+            'course_list':course_list,
+            'attendance_list':attendance_list,
+            'timeschedule_list':timeschedule_list,
+            'appointment_list':appointment_list,
+            'instructor_list':instructor_list
         }
     )
 

@@ -2,6 +2,8 @@
 				{% extends 'student_page/base.html' %}
 				{% block body %}
 				{% load static %}
+				{% load admin_templatetags %}
+				{% load humanize %}
 				
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -24,41 +26,54 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Full Name</th>
-                                            <th>Course</th>
-                                            <th>Contact Details</th>
-                                            <th>Age</th>
-                                            <th>Start Date</th>
-                                            <th>Options</th>
+                                            <th>Day</th>     
+											<th>Time Schedule</th>	
+                                            <th>Batch Code</th>                                            
+                                            <th>Course Batch</th>											
+											<th>Instructor</th>                                            
                                         </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-											<th>#</th>
-                                            <th>Full Name</th>
-                                            <th>Course</th>
-                                            <th>Contact Details</th>
-                                            <th>Age</th>
-                                            <th>Start Date</th>
-                                            <th>Options</th>
-                                        </tr>
-                                    </tfoot>
+                                    </thead>                                   
 									
                                     <tbody>                                     
 										
-										{% for users in userlist %}
+										{% for atl in attendance_list %}
 										
 										 <tr>
-                                            <td>{{ users.lastname }}, {{ users.firstname }}</td>
-                                            <td>Course</td>
-                                            <td>
-												{{ users.email_address }} | {{ users.contact_number }}
-											</td>
-                                            <td>21</td>
-                                            <td>2021/04/25</td>
                                             <td>
 											
-												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">Edit</button>
+												{{ forloop.counter }}
+											
+											</td>
+											
+											<td>											
+												{% get_scheduled_day_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list %}
+											</td> 
+											
+											<td>											
+												{% get_time_schedule_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list %}
+											</td> 
+											
+                                            <td>											
+												
+												{% get_batch_details_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list %}
+											
+											</td>                                          
+                                            <td>											
+												
+												{% get_batch_course_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list course_list %}
+											
+											</td> 				
+											
+											
+											<td>	
+											
+												{% get_instructor_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list instructor_list %}
+											
+											</td> 
+											
+                                            <td class = "d-none">
+											
+												<button type = "button" class = "btn btn-success d-none" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">Edit</button>
 												
 												<div class = "modal fade in" id = "modal-edit-student-{{ users.id }}">
 													<div class = "modal-dialog">

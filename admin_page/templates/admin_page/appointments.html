@@ -106,6 +106,7 @@
                                             <th>Schedule Type</th>
                                             <th>Hours Per Day</th>
                                             <th>No. of Enrolled</th>
+                                            <th>Course</th>                                          
                                             <th>Instructor</th>                                          
                                             <th>Options</th>
                                         </tr>
@@ -130,12 +131,36 @@
 												</td>
 												<td>{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %}</td> 
 												<td>{% number_of_enrolled al.id enrolment_list appointment_list attendance_list %}</td>
-												<td>{% get_fullname al.instructor_id userlist %}</td>                                           
+												
 												<td>
 												
-													<button type = "button" class = "btn btn-success btn-sm" data-toggle = "modal" data-target = "#modal-edit-appointment-{{ al.id }}">Edit</button>
-													<button type = "button" class = "btn btn-outline-success btn-sm get-appointment-id" rel = "{{ al.id }}" data-toggle = "modal" data-target = "#modal-add-timeschedule-{{ al.id }}">Add Time Schedule</button>
-													<button type = "button" class = "btn btn-outline-success btn-sm" rel = "{{ al.id }}" data-toggle = "modal" data-target = "#modal-view-timeschedule-{{ al.id }}"><i class = "fa fa-calendar"></i></button>
+													{% for tsa in timeschedule_list_groupby_course %}
+														
+														{% ifequal tsa.appointment_id|stringformat:"s" al.id|stringformat:"s" %}
+															{% get_course_details tsa.course_id course_list %}
+														{% endifequal %}						
+														
+													{% endfor %}
+												
+												</td>    
+												
+												<td>
+												
+													{% for tsa in timeschedule_list_groupby_course %}
+														
+														{% ifequal tsa.appointment_id|stringformat:"s" al.id|stringformat:"s" %}
+															{%  get_fullname tsa.instructor_id instructor_list %}
+														{% endifequal %}
+														
+													{% endfor %}												
+												
+												</td>    
+												
+												<td>
+												
+													<button type = "button" class = "btn btn-success btn-sm mt-2" data-toggle = "modal" data-target = "#modal-edit-appointment-{{ al.id }}">Edit</button>
+													<button type = "button" class = "btn btn-outline-success btn-sm get-appointment-id mt-2" rel = "{{ al.id }}" data-toggle = "modal" data-target = "#modal-add-timeschedule-{{ al.id }}"><i class = "fa fa-plus"></i> Add Time Schedule</button>
+													<button type = "button" class = "btn btn-outline-success btn-sm mt-2" rel = "{{ al.id }}" data-toggle = "modal" data-target = "#modal-view-timeschedule-{{ al.id }}"><i class = "fa fa-calendar"></i> View Schedules </button>
 													
 													<div class = "modal fade in" id = "modal-add-timeschedule-{{ al.id }}">
 														<div class = "modal-dialog">
@@ -148,89 +173,95 @@
 																</div> <!-- modal-header -->
 																<div class = "modal-body">
 																
+																	<div class = "note-message-{{ al.id }}">
+																	
+																	</div>
+																
 																	<form method = "POST" action = "add_timeschedule_appointment">
 																	
 																		{% csrf_token %}
 																		
-																		
-																		<div class = "form-group">
-																			<label for = "label-instructor" class = "text-gray-900">Instructor</label>
-																			<select name = "instructor_id" id = "label-instructor" class = "form-control">
-																				<option value = ""> -- Choose Instructor -- </option>
-																				{% for ins in instructor_list %}
-																					<option value = "{{ ins.id }}"> {{ ins.fullname }} </option>
-																				{% endfor %}
-																			</select>
-																		</div> <!-- /. Instructor -->																		
-																		
-																		<div class = "form-group">
-																			<label for =  "choose-course-add-time-schedule-{{ al.id }}" class = "text-gray-900">Course</label>
-																			<select name = "course_id" appointment_id = {{ al.id }} id = "choose-course-add-time-schedule-{{ al.id }}" class = "appointment-add-time-schedule-choose-course form-control">
-																				<option value = ""> -- Choose Course -- </option>
-																				{% for crs in course_list %}
-																					<option hrs = "{{ crs.hours_duration }}" value = "{{ crs.id }}"> {{ crs.course_name }} | {{ crs.course_description }} </option>
-																				{% endfor %}
-																			</select>
-																		</div> <!-- /. Course -->
-																		
-																		<div class = "form-group">
-																			<label for = "label-room" class = "text-gray-900">Room</label>
-																			<select name = "room_id" id = "label-room" class = "form-control">
-																				<option value = ""> -- Choose Room -- </option>
-																				{% for rl in rooms_list %}
-																					<option value = "{{ rl.id }}"> {{ rl.room_no }} |  {{ rl.room_name }} | {{ rl.floor }} | {{ rl.building }} </option>
-																				{% endfor %}
-																			</select>
-																		</div> <!-- /. Room -->
-																		
-																		<div class = "form-group">
-																		
-																			<label for = "label-scheduled-day" class = "text-gray-900">Hours Per Day</label>																			
-																			<input type = "hidden" name = "hours_per_day" id = "hours-per-day-{{ al.id }}" value = "{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %}"/>
-																	
-																			<h5>
-																				{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %} hour(s)
-																			</h5>
+																		<div class = "card shadow p-3 m-2">													
 																			
-																		</div> <!-- /. Hours Per Day -->
-																		
-																		
-																		<div class = "form-group">
-																		
-																			<label for = "label-scheduled-day" class = "text-gray-900">Days Required</label>																			
-																			<input type = "hidden" class = "days-required-{{ al.id }}" name = "days_required"/>
-																	
-																			<h5 class = "days-required-display-{{ al.id }}">
-																				-- Choose course above to display days required  --
-																			</h5>
+																			<div class = "form-group">
+																				<label for =  "choose-course-add-time-schedule-{{ al.id }}" class = "text-gray-900 font-weight-bold">Course</label>
+																				<select name = "course_id" appointment_id = {{ al.id }} id = "choose-course-add-time-schedule-{{ al.id }}" class = "appointment-add-time-schedule-choose-course form-control">
+																					<option value = ""> -- Choose Course -- </option>
+																					{% for crs in course_list %}
+																						<option hrs = "{{ crs.hours_duration }}" value = "{{ crs.id }}"> {{ crs.course_name }} | {{ crs.course_description }} </option>
+																					{% endfor %}
+																				</select>
+																			</div> <!-- /. Course -->
 																			
-																		</div> <!-- /. Days Required -->
+																			
+																			<div class = "form-group">
+																				<label for = "label-instructor" class = "text-gray-900 font-weight-bold">Instructor</label>
+																				<select name = "instructor_id" id = "label-instructor" class = "form-control">
+																					<option value = ""> -- Choose Instructor -- </option>
+																					
+																					<div class = "choose-instructor-{{ al.id }}">
+																						{% for ils in instructor_list %}
+																							<option value = "{{ ils.id }}"> {{ ils.fullname }} </option>
+																						{% endfor %}
+																					</div>																						
+																					
+																				</select>
+																			</div> <!-- /. Instructor -->																		
+																			
+																			
+																			
+																			<div class = "form-group">
+																				<label for = "label-room" class = "text-gray-900 font-weight-bold">Room</label>
+																				<select name = "room_id" id = "label-room" class = "form-control">
+																					<option value = ""> -- Choose Room -- </option>
+																					{% for rl in rooms_list %}
+																						<option value = "{{ rl.id }}"> {{ rl.room_no }} |  {{ rl.room_name }} | {{ rl.floor }} | {{ rl.building }} </option>
+																					{% endfor %}
+																				</select>
+																			</div> <!-- /. Room -->
+																			
+																		</div> <!-- /. Card Shadow (Instructor, Course, Room) -->
+																		
+																		
+																		<div class = "card shadow p-3 m-2">
+																		
+																			<div class = "form-group">
+																			
+																				<label for = "label-scheduled-day" class = "text-gray-900 font-weight-bold">Hours Per Day</label>																			
+																				<input type = "hidden" name = "hours_per_day" id = "hours-per-day-{{ al.id }}" value = "{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %}"/>
+																		
+																				<h5>
+																					{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %} hour(s)
+																				</h5>
+																				
+																			</div> <!-- /. Hours Per Day -->
+																			
+																			
+																			<div class = "form-group">
+																			
+																				<label for = "label-scheduled-day" class = "text-gray-900 font-weight-bold">Days Required</label>																			
+																				<input type = "hidden" class = "days-required-{{ al.id }}" name = "days_required"/>
+																		
+																				<h5 class = "days-required-display-{{ al.id }}">
+																					-- Choose course above to display days required  --
+																				</h5>
+																				
+																			</div> <!-- /. Days Required -->
+																		
+																		</div> <!-- /. Card Shadow (Hours per Day and Days Required) -->
 																		
 																		
 																		
-																		<div class = "form-group">
-																			<label for = "label-scheduled-day" class = "text-gray-900">Scheduled Day</label>																			
+																		<div class = "form-group p-3 m-2">
+																			<label for = "label-scheduled-day" class = "text-gray-900 font-weight-bold">Scheduled Day</label>																			
 																			<input type = "hidden" class = "appointment_id_{{ al.id }}" rel = "{{ al.id }}" value = "{% get_schedule_type al.schedule_type scheduled_type_list %}"/>
 																			
 																			<div class = "scheduled_day_choice_{{ al.id }}">
-																			
+																				-- Choose course above to display scheduled days input  --
 																			</div>
 																			
-																		</div> <!-- /. Scheduled Day -->
+																		</div> <!-- /. Scheduled Day -->																		
 																		
-																		<div class = "form-group">
-																		
-																			<label for = "label-time-slot" class = "text-gray-900">Time Start</label>								
-																			<input type = "time" id = "label-time-slot" name = "time_start" class = "form-control"/>
-																		
-																		</div> <!-- /. Time Start -->
-																		
-																		<div class = "form-group">
-																		
-																			<label for = "label-time-slot" class = "text-gray-900">Time End</label>								
-																			<input type = "time" id = "label-time-slot" name = "time_end" class = "form-control"/>
-																			
-																		</div> <!-- /. Time End -->
 																		
 																		<input type = "hidden" name = "appointment_id" value = "{{ al.id }}"/>
 																	
@@ -238,7 +269,7 @@
 																	
 																	<div class = "modal-footer">
 																	
-																		<button type = "submit" class = "btn btn-success">Submit</button>
+																		<button type = "submit" class = "btn btn-success add-time-schedule-submit">Submit</button>
 																		<button type = "button" class = "btn btn-outline-success" data-dismiss = "modal">Cancel</button>
 																	
 																	</div>

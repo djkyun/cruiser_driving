@@ -23,40 +23,24 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+										
                                             <th>#</th>
-                                            <th>Full Name</th>
-                                            <th>Course</th>
-                                            <th>Contact Details</th>
-                                            <th>Age</th>
-                                            <th>Start Date</th>
-                                            <th>Options</th>
+                                            <th>Lesson</th>
+                                            <th>Details</th>
+                                          
                                         </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-											<th>#</th>
-                                            <th>Full Name</th>
-                                            <th>Course</th>
-                                            <th>Contact Details</th>
-                                            <th>Age</th>
-                                            <th>Start Date</th>
-                                            <th>Options</th>
-                                        </tr>
-                                    </tfoot>
+                                    </thead>                                  
 									
                                     <tbody>                                     
 										
 										{% for users in userlist %}
 										
 										 <tr>
+                                            <td>{{ forloop.counter }}</td>
                                             <td>{{ users.lastname }}, {{ users.firstname }}</td>
-                                            <td>Course</td>
-                                            <td>
-												{{ users.email_address }} | {{ users.contact_number }}
-											</td>
-                                            <td>21</td>
-                                            <td>2021/04/25</td>
-                                            <td>
+                                            <td>Details</td>
+                                           
+                                            <td class = "d-none">
 											
 												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">Edit</button>
 												

@@ -470,35 +470,7 @@
 				
 				});
 				
-				$('.get-appointment-id').on('click',function(){
 				
-					var appointment_id = $(this).attr('rel');
-					var scheduled_days = $('.appointment_id_'+appointment_id+'').val();
-					
-					var content_container = '';
-					var content_div = '';
-					
-					var days_array = scheduled_days.split('-');
-					
-					content_container = 'scheduled_day_choice_'+appointment_id;
-					
-					$('.'+content_container+'').html("");
-					
-					for(i = 0;i<days_array.length;i++)
-					{
-						var day_content = days_array[i];	
-						
-						content_div += '<div class = "form-check">';
-							content_div += '<input type = "checkbox" id = "scheduled_day" value = "'+ day_content +'" class = "form-check-input" name = "scheduled_days"/>';
-							content_div += '<label class = "form-check-label text-gray-900" for = "scheduled_day">' + day_content + '</label>';
-						content_div += '</div>';					
-						
-					}					
-					
-					$('.'+content_container+'').append(content_div);
-				
-				});
-			
 			});
 		</script>
 		
@@ -506,6 +478,7 @@
 		
 		$(document).ready(function(){
 		
+				
 			$('.appointment-add-time-schedule-choose-course').on('change',function(){
 			
 				var appointment_id = $(this).attr('appointment_id');
@@ -515,20 +488,153 @@
 				var days_required = parseInt(course_hours_duration) / parseInt(hours_per_day);
 				var excess_hours =  parseInt(course_hours_duration) % parseInt(hours_per_day);
 				
+				var days_required_final = 0;
+				
+				var checkbox_checked_count = $('.scheduled_day:checkbox:checked').length;
+				
+			
+					
 				days_required = parseInt(days_required);
+				days_required_final = days_required
+				
+				if(excess_hours > 0)
+				{
+					days_required = days_required + 1;
+				}				
 				
 				days_required = days_required + " day(s) ";
 				
 				if(excess_hours > 0)
 				{
-					days_required += " and "+excess_hours+" hour(s)";
+					days_required += " - On final day for only "+excess_hours+" hour(s)";
+					days_required_final = days_required_final + 1;
+				}			
+				
+				if(parseInt(checkbox_checked_count) == parseInt(days_required_final))
+				{				
+					$('.add-time-schedule-submit').addClass('d-none');				
+				}
+				else
+				{
+					$('.add-time-schedule-submit').removeClass('d-none');			
 				}
 				
-				
-				
 				$('.days-required-display-'+appointment_id+'').html(""+days_required+"");
+								
+				
+				// for scheduled days
+				
+				var scheduled_days = $('.appointment_id_'+appointment_id+'').val();
+				
+				var content_container = '';
+				var content_div = '';
+				
+				
+				
+				var days_array = scheduled_days.split('-');
+				var scheduled_days_limit = days_array.length;
+				
+				content_container = 'scheduled_day_choice_'+appointment_id;
+				
+				$('.'+content_container+'').html("");
+				
+				var limit_spec_days = 0;
+				
+				limit_spec_days = scheduled_days_limit;					
+				
+				for(i = 0;i<limit_spec_days;i++)
+				{
+					var day_content = days_array[i];	
+					var last_day_ndx = limit_spec_days - 1;			
+
+					var hours_per_day_specified = hours_per_day;
+					
+					if(last_day_ndx == i)
+					{
+						if(parseInt(excess_hours) > 0)
+						{
+							hours_per_day_specified = excess_hours;
+						}
+					}
+					
+					content_div += '<div class = "card shadow p-3 m-2">';
+					
+						content_div += '<div class = "form-check my-2">';
+						
+							content_div += '<input type = "checkbox" id = "scheduled_day" rel = "'+appointment_id+'" value = "'+ day_content +'" class = "form-check-input scheduled_day" name = "scheduled_days"/>';
+							content_div += '<label class = "form-check-label text-gray-900" for = "scheduled_day"><h4 class = "font-weight-bold">' + day_content + ' | '+hours_per_day_specified+' hour(s)</h4></label>';
+							content_div += '<button type = "button" rel = "'+day_content+'" class = "btn btn-sm btn-outline-success mx-3 specify-to-all">Set to all days</button>';	
+
+
+						content_div += '</div>';
+						
+						content_div += '<div class = "form-group">';
+							content_div += '<label for = "label-time-start-slot-'+day_content+'" class = "text-gray-900">Time Start</label>';								
+							content_div += '<input type = "time" id = "label-time-start-slot-'+day_content+'" name = "time_start" class = "form-control time-start-value"/>';
+						content_div += '</div>';
+						
+						content_div += '<div class = "form-group">';
+							content_div += '<label for = "label-time-end-slot-'+day_content+'" class = "text-gray-900">Time End</label>';								
+							content_div += '<input type = "time" id = "label-time-end-slot-'+day_content+'" name = "time_end" class = "form-control time-end-value"/>';
+						content_div += '</div>';	
+					
+					content_div += '</div>';					
+					
+				}					
+				
+				$('.'+content_container+'').append(content_div);
+				
+				$('.specify-to-all').on('click',function(){
+				
+					var for_day = $(this).attr('rel');
+					
+					var time_start = $('#label-time-start-slot-'+for_day+'').val();
+					var time_end = $('#label-time-end-slot-'+for_day+'').val();
+					
+					$('.time-start-value').val(time_start);
+					$('.time-end-value').val(time_end);
+				
+				});
+				
+				var content_note = '';
+				var checked_count = 0;
+				
+				$('.scheduled_day').on('click',function(){				
+				
+					
+				
+					checked_count = $('.scheduled_day:checkbox:checked').length;
+										
+					
+					if(checked_count > days_required_final)
+					{					
+						var error_message = '';
+						
+						error_message = 'Required number of day(s) is only '+ days_required_final +'';
+						
+						content_note += '<div class = "alert alert-warning">';
+							content_note += ''+error_message+'';
+						content_note += '</div">';
+						
+						$('.note-message-'+appointment_id+'').html(content_note);
+						$('.note-message-'+appointment_id+'').focus();					
+						
+						checked_count = days_required_final;
+						$('.add-time-schedule-submit').addClass('d-none');
+						
+					}
+					else
+					{
+						$('.note-message-'+appointment_id+'').html('');
+						$('.add-time-schedule-submit').removeClass('d-none');
+						content_note = '';
+					}
+				
+				});
 			
-			})
+			});
+			
+			
 		
 		});
 		

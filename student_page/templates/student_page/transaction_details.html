@@ -2,6 +2,8 @@
 				{% extends 'student_page/base.html' %}
 				{% block body %}
 				{% load static %}
+				{% load admin_templatetags %}
+				{% load humanize %}
 				
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -23,61 +25,32 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Lesson</th>
+                                            <th>#</th>                                           
                                             <th>Course</th>
-                                            <th>Contact Details</th>
-                                            <th>Age</th>
-                                            <th>Start Date</th>
-                                            <th>Options</th>
+                                            <th>Amount Paid</th>
+                                            <th>Balance</th>            
+                                            
                                         </tr>
                                     </thead>                                   
 									
                                     <tbody>                                     
 										
-										{% for users in userlist %}
+										{% for stl in sales_transaction_list %}
 										
 										 <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>{{ users.lastname }}, {{ users.firstname }}</td>
-                                            <td>Course</td>
-                                            <td>
-												{{ users.email_address }} | {{ users.contact_number }}
-											</td>
-                                            <td>21</td>
-                                            <td>2021/04/25</td>
-                                            <td>
+                                            <td>{{ forloop.counter }}</td>                                           
+                                            <td>											
 											
-												<button type = "button" class = "btn btn-success" data-toggle = "modal" data-target = "#modal-edit-student-{{ users.id }}">Edit</button>
-												
-												<div class = "modal fade in" id = "modal-edit-student-{{ users.id }}">
-													<div class = "modal-dialog">
-														<div class = "modal-content">
-															<div class = "modal-header">
-																<h2 class = "text-uppercase font-weight-bold"> {{ users.lastname }}, {{ users.firstname }} </h2>
-															</div>
-															<div class = "modal-body">
-																<form method = "POST" action  = "admin_page/add_user">
-																	{% csrf_token %}
-																	<div class = "form-group">
-																		<label id = "firstname">First Name</label>
-																		<input type = "text" id = "firstname" value = "{{ users.user_firstname }}" class = "form-control" placeholder = "First Name" name = "user_firstname"/>
-																	</div>
-																	<div class = "form-group">
-																		<label id = "lastname">Last Name</label>
-																		<input type = "text" id = "lastname" value = "{{ users.user_lastname }}" class = "form-control" placeholder = "Last Name" name = "user_lastname"/>
-																	</div>
-																	<div class = "form-group">																		
-																		<button class = "btn btn-success" type = "submit" role = "button">Save</button>
-																	</div>
-																</form>
-															</div>
-														</div>
-													</div>
-												</div>
-												
+											{% get_course_details_by_enrolment_id stl.enrolment_id enrolment_list course_list %}
 											
 											</td>
+                                            <td>
+												PHP {{ stl.amount_paid|floatformat:2 }}
+											</td>
+                                            <td>
+												PHP {{ stl.amount_balance|floatformat:2 }}
+											</td>                                           
+                                          
                                         </tr>
 										
 										{% endfor %}

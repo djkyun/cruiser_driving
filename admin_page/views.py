@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import LoginHistory, Course, SystemSettings, Category, PaymentMethodList, Enrolment, SalesTransaction, Appointment, TimeScheduleAppointment, ScheduleType, Attendance, Rooms, Lesson, LessonDetailTitle, LessonDetail, InstructorSpecialization, CategoryType, CarType
 from website.models import UserRecords
-from django.db.models import Q, Sum, Avg
+from django.db.models import Q, Sum, Avg, Count
 from django.contrib.auth.models import User
 from django.contrib.auth import login as login_form, authenticate, logout as logout_form
 from django.contrib import messages
@@ -729,7 +729,7 @@ def add_lesson(request):
             
         messages.success(request,"Lesson Numbers Added, You may now add Lesson Details for every Lesson Number")
         
-        
+    lesson_list                 = Lesson.objects.all()    
     categorylist                = Category.objects.all()
     categorytypelist            = CategoryType.objects.all()
     cartypelist                 = CarType.objects.all()
@@ -752,6 +752,7 @@ def add_lesson(request):
             'website_name': website_name,
             'userlist': userlist,
             'instructor_list': instructor_list,
+            'lesson_list': lesson_list,
             'User_list': User_list,
             'courselist': courselist,
             'categorylist': categorylist,            
@@ -854,12 +855,15 @@ def appointments_admin(request):
     userlist                = UserRecords.objects.all().order_by('lastname') 
     instructor_list         = UserRecords.objects.filter(role_id = '3')
     enrolment_list          = Enrolment.objects.all().order_by('id') 
+    instructor_specs_list   = InstructorSpecialization.objects.all().order_by('instructor_specs_id') 
     course_list             = Course.objects.all().order_by('id') 
     attendance_list         = Attendance.objects.all().order_by('id') 
     appointment_list        = Appointment.objects.all().order_by('id') 
     timeschedule_list       = TimeScheduleAppointment.objects.all().order_by('id') 
     rooms_list              = Rooms.objects.all().order_by('id') 
-    scheduled_type_list     = ScheduleType.objects.all().order_by('id') 
+    scheduled_type_list     = ScheduleType.objects.all().order_by('id')
+    
+    timeschedule_list_groupby_course = TimeScheduleAppointment.objects.values('course_id','appointment_id','instructor_id').annotate(dcount=Count('course_id')).order_by()
     
     if request.user.is_authenticated:
     
@@ -883,6 +887,7 @@ def appointments_admin(request):
             'website_name': website_name,
             'userlist': userlist,
             'instructor_list': instructor_list,
+            'instructor_specs_list': instructor_specs_list,
             'scheduled_type_list': scheduled_type_list,
             'user_id': user_id,
             'course_list': course_list,
@@ -891,6 +896,7 @@ def appointments_admin(request):
             'attendance_list': attendance_list,
             'enrolment_list': enrolment_list,
             'timeschedule_list':timeschedule_list,
+            'timeschedule_list_groupby_course':timeschedule_list_groupby_course,
             'username': username,
             'fullname': fullname,
             'menu_name':'Appointments'
@@ -951,7 +957,7 @@ def add_timeschedule_appointment(request):
     instructor_id                       = request.POST['instructor_id']     
     course_id                           = request.POST['course_id']     
     scheduled_day                       = request.POST.getlist('scheduled_days')
-    time_start                          = request.POST['time_start']     
+    time_start                          = request.POST['time_start']    
     time_end                            = request.POST['time_end']
     room_id                             = request.POST['room_id']
     assigned_by                         = user_id  

@@ -27,6 +27,22 @@ def get_course_name_by_id(course_id, courselist):
     return value_var
     
 @register.simple_tag
+def get_course_from_appointment(appointment_id, timeschedule_list, course_list):
+
+    course_id = ''
+    course_details = ''    
+    
+    for tsl in timeschedule_list:
+        if str(tsl.appointment_id) == str(appointment_id):
+            course_id = tsl.course_id
+                
+    for cl in course_list:
+        if str(cl.id) == str(course_id):
+            course_details = cl.course_code + ' | ' + cl.course_name + ' ' + cl.course_description            
+                
+    return course_details
+    
+@register.simple_tag
 def get_category_by_course_id(course_id, courselist, categorylist):
     value_var = ''
     
@@ -49,7 +65,90 @@ def get_course_name_by_enrolment_id(enrolment_id, enrolmentlist, courselist):
                     value_var = cl.course_name
             
     return value_var
-
+    
+@register.simple_tag
+def get_course_details_by_enrolment_id(enrolment_id, enrolmentlist, courselist):
+    value_var = ''
+    
+    for el in enrolmentlist:        
+        for cl in courselist:
+            if str(el.id) == str(enrolment_id):
+                if str(el.enrolled_course) == str(cl.id):
+                    value_var = cl.course_code + ' | ' + cl.course_name + ' ' + cl.course_description
+            
+    return value_var
+    
+@register.simple_tag
+def get_batch_details_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list):
+    value_var = ''
+    
+    for tsl in timeschedule_list:   
+        for apt in appointment_list:
+            if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
+                value_var = apt.batch_appointment_code + ' | ' + apt.batch_appointment_name
+    
+    return value_var
+    
+@register.simple_tag
+def get_batch_course_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list, course_list):
+    course_id = ''
+    batch_course = ''
+    
+    for tsl in timeschedule_list:   
+        for apt in appointment_list:
+            if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
+                course_id = tsl.course_id
+    
+    for crs in course_list:
+        if str(crs.id) == str(course_id):
+            batch_course = crs.course_code + ' | ' + crs.course_name + ' - ' +crs.course_description
+    
+    return batch_course
+  
+  
+@register.simple_tag
+def get_time_schedule_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list):
+   
+    time_schedule_string = ''
+    
+    for tsl in timeschedule_list:   
+        for apt in appointment_list:
+            if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
+                time_schedule_string += str(tsl.time_start) + ' - ' + str(tsl.time_end)
+      
+    
+    return time_schedule_string
+    
+@register.simple_tag
+def get_scheduled_day_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list):
+   
+    time_schedule_string = ''
+    
+    for tsl in timeschedule_list:   
+        for apt in appointment_list:
+            if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
+                time_schedule_string += str(tsl.scheduled_day)
+      
+    
+    return time_schedule_string
+    
+@register.simple_tag
+def get_instructor_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list, instructor_list):
+   
+    instructor_id = ''
+    fullname_instructor = ''
+    
+    for tsl in timeschedule_list:   
+        for apt in appointment_list:
+            if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
+                instructor_id = str(tsl.instructor_id)      
+    
+    for ins in instructor_list:
+        if str(ins.id) == str(instructor_id):
+            fullname_instructor = ins.firstname + ' ' + ins.middlename + ' ' + ins.lastname + ' ' + ins.name_extension
+    
+    return fullname_instructor
+    
 @register.simple_tag
 def get_course_name_by_a_user_id(authentication_user_id, enrolmentlist, courselist):
     value_var = ''
@@ -74,6 +173,7 @@ def get_instructor_by_a_user_id(authentication_user_id, enrolment_list, attendan
                         value_var = ul.lastname +', '+ ul.firstname + ' ' + ul.middlename + ' ' + ul.name_extension 
                 
     return value_var
+        
     
 @register.simple_tag
 def get_schedule_by_a_user_id(authentication_user_id, enrolment_list, attendance_list, appointment_list, schedule_type_list):
@@ -155,12 +255,14 @@ def get_course_category_by_enrolment_id(authentication_user_id, enrolment_list, 
     category_type_id = ''
     car_type_name = ''
     category_type_name = ''
+    course_code = ''
     
     for cl in courselist:
         for el in enrolment_list:
             if str(cl.id) == str(el.enrolled_course) and str(el.user_id) == str(authentication_user_id):
                 course_name = cl.course_name
                 course_id = cl.id
+                course_code = cl.course_code
                 car_type_id = cl.car_type_id
                 category_type_id = cl.category_type_id
                 
@@ -177,7 +279,7 @@ def get_course_category_by_enrolment_id(authentication_user_id, enrolment_list, 
             if str(cl.category_id) == str(cgl.id) and str(cl.id) == str(course_id):
                 category_name = cgl.category_name
     
-    value_var = course_name + '\n(' + category_type_name + ' ' + category_name + ') for ' +car_type_name
+    value_var = course_code + ' | ' + course_name + '\n(' + category_type_name + ' ' + category_name + ') for ' +car_type_name
     
     return value_var
  
@@ -300,7 +402,27 @@ def get_license_type_from_authentication_user_id(authentication_user_id, enrolme
         
     return value_var  
 
+@register.simple_tag
+def get_instructor_course_specs_api(instructor_specs_list, instructor_list, course_id):
+    value_var = ''
+    is_specialize = 0
     
+    for ins in instructor_list:       
+        for ils in instructor_specs_list:
+            if (str(ils.instructor_id) == str(ins.id) and str(course_id) == str(ils.course_id)):
+                is_specialize = 1
+            else:
+                is_specialize = 0
+        
+        if(is_specialize == 1):
+            value_var += str(ins.id) + '-1' + ','
+        else:
+            value_var += str(ins.id) + '-0' + ','
+            
+            
+    value_var = value_var.rstrip(',')       
+                       
+    return value_var
        
     
 @register.simple_tag

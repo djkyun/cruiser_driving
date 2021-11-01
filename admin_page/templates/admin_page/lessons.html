@@ -9,15 +9,20 @@
                 <div class="container-fluid">
 
                       <!-- Page Heading -->
-                      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><span class = "font-weight-bold">Lessons</span> 
 						
 						<p class="mb-4">
 							<small>Detailed List of Lessons</small>
 						</p>				
 					
-						</h1>
+						</h1>						
+                        <a href="skills_assessments" class="d-none d-sm-inline-block btn btn-lg btn-outline-danger shadow-sm">
+							<i class="fas fa-arrow-left fa-sm text-danger-900"></i> Back to Skills Assessments
+						</a>
 						
+                    </div>
+					
 						
 						{% for message in messages %}
 							<h4 class = "alert alert-success alert-dismissible fade show" role = "alert">
@@ -27,13 +32,6 @@
 								</button>
 							</h4>
 						{% endfor %}
-
-						
-                        <a href="skills_assessments" class="d-none d-sm-inline-block btn btn-lg btn-outline-danger shadow-sm">
-							<i class="fas fa-arrow-left fa-sm text-danger-900"></i> Back to Skills Assessments
-						</a>
-						
-                    </div>
 					
 					<div class = "modal fade in" id = "modal-add-lesson">
 						<div class = "modal-dialog">

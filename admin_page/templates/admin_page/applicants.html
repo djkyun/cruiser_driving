@@ -741,9 +741,10 @@
 																		
 																			<thead>
 																				<tr>
-																					<th>#</th>
-																					<th>Appointment ID</th>
+																					<th>#</th>																					
+																					<th>Batch Code</th>
 																					<th>Batch Name</th>
+																					<th>Course</th>
 																					<th>Instructor</th>
 																					<th>Schedule</th>
 																					<th>Hours Duration Per Day</th>
@@ -756,9 +757,16 @@
 																			<tbody>
 																				{% for apt in appointment_list %}
 																					<tr>
-																						<td>{{ forloop.counter }}</td>
-																						<td>{{ apt.id }}</td>
+																						<td>{{ forloop.counter }}</td>																						
+																						<td>{{ apt.batch_appointment_code }}</td>
 																						<td>{{ apt.batch_appointment_name }}</td>
+																						
+																						<td>
+																						
+																							{% get_course_from_appointment apt.id timescheduleappointment courselist %}
+																						
+																						</td>
+																						
 																						<td>{% get_instructor_by_time_schedule_appointment_id apt.id timescheduleappointment instructor_list %}</td>
 																						<td>{% get_schedule_type apt.schedule_type schedule_type_list %} </td>
 																						<td>{% get_hours_per_day_schedule apt.schedule_type schedule_type_list %} hour(s) </td>																						
