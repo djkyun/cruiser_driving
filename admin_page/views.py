@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import LoginHistory, Course, SystemSettings, Category, PaymentMethodList, Enrolment, SalesTransaction, Appointment, TimeScheduleAppointment, ScheduleType, Attendance, Rooms, Lesson, LessonDetailTitle, LessonDetail, InstructorSpecialization, CategoryType, CarType
 from website.models import UserRecords
-from django.db.models import Q, Sum, Avg, Count
+from django.db.models import Q, Sum, Avg
 from django.contrib.auth.models import User
 from django.contrib.auth import login as login_form, authenticate, logout as logout_form
 from django.contrib import messages
