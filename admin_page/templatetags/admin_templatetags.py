@@ -380,6 +380,22 @@ def get_hours_per_day_schedule(schedule_id, schedule_type_list):
     return value_var
     
 @register.simple_tag
+def get_days_required_from_hours_per_day_schedule(schedule_id, schedule_type_list, course_hours_duration):
+    hours_per_day = ''
+    
+    for sched in schedule_type_list:
+        if str(schedule_id) == str(sched.id):
+            hours_per_day = sched.hours_per_day            
+            
+    days_required = int(course_hours_duration) / int(hours_per_day)
+    excess_hours = int(course_hours_duration) % int(hours_per_day)
+    
+    if (excess_hours > 0):
+        days_required = int(days_required) + 1
+            
+    return days_required
+    
+@register.simple_tag
 def get_hours_from_a_user_id(authentication_user_id, enrolment_list, course_list):
     value_var = ''
      

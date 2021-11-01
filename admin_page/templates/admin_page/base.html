@@ -502,6 +502,38 @@
 			});
 		</script>
 		
+		<script type = "text/javascript">
+		
+		$(document).ready(function(){
+		
+			$('.appointment-add-time-schedule-choose-course').on('change',function(){
+			
+				var appointment_id = $(this).attr('appointment_id');
+				var course_hours_duration = $('#choose-course-add-time-schedule-'+appointment_id+' option:selected').attr('hrs');
+				var hours_per_day = $('#hours-per-day-'+appointment_id+'').val();
+			
+				var days_required = parseInt(course_hours_duration) / parseInt(hours_per_day);
+				var excess_hours =  parseInt(course_hours_duration) % parseInt(hours_per_day);
+				
+				days_required = parseInt(days_required);
+				
+				days_required = days_required + " day(s) ";
+				
+				if(excess_hours > 0)
+				{
+					days_required += " and "+excess_hours+" hour(s)";
+				}
+				
+				
+				
+				$('.days-required-display-'+appointment_id+'').html(""+days_required+"");
+			
+			})
+		
+		});
+		
+		</script>
+		
 		
 
 	</body>

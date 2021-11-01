@@ -164,11 +164,11 @@
 																		</div> <!-- /. Instructor -->																		
 																		
 																		<div class = "form-group">
-																			<label for = "label-course" class = "text-gray-900">Course</label>
-																			<select name = "course_id" id = "label-course" class = "form-control">
+																			<label for =  "choose-course-add-time-schedule-{{ al.id }}" class = "text-gray-900">Course</label>
+																			<select name = "course_id" appointment_id = {{ al.id }} id = "choose-course-add-time-schedule-{{ al.id }}" class = "appointment-add-time-schedule-choose-course form-control">
 																				<option value = ""> -- Choose Course -- </option>
 																				{% for crs in course_list %}
-																					<option value = "{{ crs.id }}"> {{ crs.course_name }} | {{ crs.course_description }} </option>
+																					<option hrs = "{{ crs.hours_duration }}" value = "{{ crs.id }}"> {{ crs.course_name }} | {{ crs.course_description }} </option>
 																				{% endfor %}
 																			</select>
 																		</div> <!-- /. Course -->
@@ -186,13 +186,27 @@
 																		<div class = "form-group">
 																		
 																			<label for = "label-scheduled-day" class = "text-gray-900">Hours Per Day</label>																			
-																			<input type = "hidden" name = "hours_per_day" value = "{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %}"/>
+																			<input type = "hidden" name = "hours_per_day" id = "hours-per-day-{{ al.id }}" value = "{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %}"/>
 																	
 																			<h5>
 																				{% get_hours_per_day_schedule al.schedule_type scheduled_type_list %} hour(s)
 																			</h5>
 																			
 																		</div> <!-- /. Hours Per Day -->
+																		
+																		
+																		<div class = "form-group">
+																		
+																			<label for = "label-scheduled-day" class = "text-gray-900">Days Required</label>																			
+																			<input type = "hidden" class = "days-required-{{ al.id }}" name = "days_required"/>
+																	
+																			<h5 class = "days-required-display-{{ al.id }}">
+																				-- Choose course above to display days required  --
+																			</h5>
+																			
+																		</div> <!-- /. Days Required -->
+																		
+																		
 																		
 																		<div class = "form-group">
 																			<label for = "label-scheduled-day" class = "text-gray-900">Scheduled Day</label>																			
