@@ -28,6 +28,7 @@
                                             <th>#</th>
                                             <th>Day</th>     
 											<th>Time Schedule</th>	
+                                            <th>Room</th>                                            
                                             <th>Batch Code</th>                                            
                                             <th>Course Batch</th>											
 											<th>Instructor</th>                                            
@@ -51,6 +52,10 @@
 											
 											<td>											
 												{% get_time_schedule_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list %}
+											</td> 
+											
+											<td>											
+												{% get_room_from_ts_appointment_id atl.time_schedule_appointment_id appointment_list timeschedule_list room_list %}
 											</td> 
 											
                                             <td>											

@@ -214,13 +214,17 @@ def transaction_details(request):
     sales_transaction_list  = SalesTransaction.objects.filter(user_id = a_user_id);
     course_list             = Course.objects.all();
     enrolment_list          = Enrolment.objects.all();
+    payment_method_list     = PaymentMethodList.objects.all();   
 
     return render(
         request,
         'student_page/transaction_details.html',
         {
+            'username': username,
+            'fullname': fullname,
             'menu_name':'Transaction Details',
             'sales_transaction_list':sales_transaction_list,
+            'payment_method_list':payment_method_list,            
             'course_list':course_list,
             'enrolment_list':enrolment_list
         }
@@ -260,10 +264,27 @@ def reference_no_update(request):
     
 def skillsassessments(request):
 
+    if request.user.is_authenticated:
+    
+        username = request.user
+        user_id = username.id
+        
+        try:
+            user_list = UserRecords.objects.get(authentication_user_id = user_id)
+            fullname = user_list.firstname +' '+user_list.lastname  
+        except:
+            user_list = ''
+            fullname = ''
+            
+    else:
+        return redirect('/')  
+        
     return render(
         request,
         'student_page/skills_assessments.html',
-        {
+        {            
+            'username': username,
+            'fullname': fullname,
             'menu_name':'Skills Assessments'
         }
     )
@@ -284,32 +305,59 @@ def appointments(request):
             
     else:
         return redirect('/')  
+    
+    a_user_id               = user_list.authentication_user_id   
         
     course_list             = Course.objects.all()
-    attendance_list         = Attendance.objects.all()
+    
+    enrolment_list          = Enrolment.objects.get(user_id = a_user_id)
+    enrolment_id_found      = enrolment_list.id
+    
+    attendance_list         = Attendance.objects.filter(enrolment_id = enrolment_id_found)
     timeschedule_list       = TimeScheduleAppointment.objects.all().order_by('id')
     appointment_list        = Appointment.objects.all().order_by('id')
     instructor_list         = UserRecords.objects.all()
+    room_list               = Rooms.objects.all()
 
     return render(
         request,
         'student_page/appointments.html',
-        {
+        {            
+            'username':username,
+            'fullname':fullname,
             'menu_name':'Appointments',
             'course_list':course_list,
             'attendance_list':attendance_list,
             'timeschedule_list':timeschedule_list,
             'appointment_list':appointment_list,
-            'instructor_list':instructor_list
+            'instructor_list':instructor_list,
+            'room_list':room_list
         }
     )
 
 def driving_guidelines(request):
 
+    if request.user.is_authenticated:
+    
+        username = request.user
+        user_id = username.id
+        
+        try:
+            user_list = UserRecords.objects.get(authentication_user_id = user_id)
+            fullname = user_list.firstname +' '+user_list.lastname  
+        except:
+            user_list = ''
+            fullname = ''
+            
+    else:
+        return redirect('/') 
+        
     return render(
         request,
         'student_page/driving_guidelines.html',
         {
+            'username':username,
+            'fullname':fullname,
             'menu_name':'Driving Guidelines'
         }
     )

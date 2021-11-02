@@ -29,6 +29,9 @@
                                             <th>Course</th>
                                             <th>Amount Paid</th>
                                             <th>Balance</th>            
+                                            <th>Reference No.</th> 
+											<th>Payment Method</th>  
+											<th>Payment Term</th>  
                                             
                                         </tr>
                                     </thead>                                   
@@ -50,7 +53,15 @@
                                             <td>
 												PHP {{ stl.amount_balance|floatformat:2 }}
 											</td>                                           
-                                          
+											<td>
+												{{ stl.payment_reference_no }}
+											</td>
+											<td>											
+												{% get_payment_method_by_id stl.payment_method payment_method_list %}
+											</td>
+											<td>												
+												{% get_payment_term stl.payment_term %}
+											</td>
                                         </tr>
 										
 										{% endfor %}

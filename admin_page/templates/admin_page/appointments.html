@@ -188,7 +188,7 @@
 																				<select name = "course_id" appointment_id = {{ al.id }} id = "choose-course-add-time-schedule-{{ al.id }}" class = "appointment-add-time-schedule-choose-course form-control">
 																					<option value = ""> -- Choose Course -- </option>
 																					{% for crs in course_list %}
-																						<option hrs = "{{ crs.hours_duration }}" value = "{{ crs.id }}"> {{ crs.course_name }} | {{ crs.course_description }} </option>
+																						<option hrs = "{{ crs.hours_duration }}" value = "{{ crs.id }}"> {{ crs.course_code }} | {{ crs.course_name }} | {{ crs.course_description }} </option>
 																					{% endfor %}
 																				</select>
 																			</div> <!-- /. Course -->

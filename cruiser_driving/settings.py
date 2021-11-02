@@ -14,7 +14,7 @@ from pathlib import os, Path
 from . info import *
 import django_heroku
 import dj_database_url
-from decouple import config
+#from decouple import config
 
 
 EMAIL_USE_TLS = EMAIL_USE_TLS

@@ -114,10 +114,27 @@ def get_time_schedule_from_ts_appointment_id(timeschedule_appointment_id, appoin
     for tsl in timeschedule_list:   
         for apt in appointment_list:
             if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
-                time_schedule_string += str(tsl.time_start) + ' - ' + str(tsl.time_end)
+                time_schedule_string = str(tsl.time_start) + ' - ' + str(tsl.time_end)
       
     
     return time_schedule_string
+    
+@register.simple_tag
+def get_room_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list, room_list):
+   
+    room_id = ''
+    room_details = ''
+    
+    for tsl in timeschedule_list:   
+        for apt in appointment_list:
+            if str(tsl.appointment_id) == str(apt.id) and str(tsl.id) == str(timeschedule_appointment_id):
+                room_id = str(tsl.room_id)
+                
+    for rm in room_list:
+        if str(room_id) == str(rm.id):
+            room_details =  'ROOM ' + rm.room_no + ' ' + rm.room_name + '(' +rm.building + ' - ' +rm.floor + ')'      
+    
+    return room_details
     
 @register.simple_tag
 def get_scheduled_day_from_ts_appointment_id(timeschedule_appointment_id, appointment_list, timeschedule_list):
@@ -557,22 +574,17 @@ def get_days_duration_from_a_user_id(authentication_user_id, enrolment_list, cou
     return value_var
     
 @register.simple_tag
-def number_of_enrolled(appointment_id, enrolment_list, appointment_list, attendance_list):
+def number_of_enrolled(appointment_id, enrolment_list, attendance_list, timeschedule_appointment):
 
     count_enrolled = 0
+    found = 0
     
-    for el in enrolment_list:
-        for apt in appointment_list:
-        
-            found = 0
-            
-            for att in attendance_list:
-                if str(att.enrolment_id) == str(el.id):
-                
-                    found = 1
+    for tsl in timeschedule_appointment:     
+        for att in attendance_list:         
+            found = 1
                     
-            if found == 1:
-                count_enrolled = count_enrolled + 1
+    if(found == 1):
+        count_enrolled = count_enrolled + 1           
                 
     return str(count_enrolled)
     
